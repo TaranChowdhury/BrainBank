@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import "./Home.css"
 import HomePageImg from '../../assets/HomePageImg.png';
 import Instagram from '../../assets/instagram.png';
+import Facebook from '../../assets/facebook.png';
+import GitHub from '../../assets/github.png';
 
 function Home() {
 
@@ -23,7 +25,9 @@ function Home() {
 
 
             <div className="socialsContainer">
-                <img src={Instagram} alt="Instagram Image" />
+                <img className="insta" src={Instagram} alt="Instagram Image" />
+                <img className="fb" src={Facebook} alt="Facebook Image" />
+                <img className="gh" src={GitHub} alt="GitHub Image" />
             </div>
 
             <img className="homePageContainer" src={HomePageImg} alt="Home Page Image" />
