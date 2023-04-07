@@ -1,0 +1,82 @@
+.mainTitle{
+    text-align: center;
+
+    font-family: 'Italiana';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 40px;
+    /* line-height: px; */
+
+    /* identical to box height */
+
+
+    color: #FFFFFF;
+
+}
+.navbar {
+  width: 100%;
+
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  background: #3E4436;
+
+}
+
+/* unvisited link */
+a:link {
+    color: #FFFFFF;
+    text-decoration: none;
+  }
+  
+  /* visited link */
+  a:visited {
+
+    font-family: 'Italiana';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 25px;
+    margin-top: 0%;
+
+    color: #FFFFFF;
+    text-decoration: none;
+  }
+  
+  /* mouse over link */
+  a:hover {
+    color: #C4A484;
+    text-decoration: none;
+  }
+  
+  /* selected link */
+  a:active {
+    font-family: 'Italiana';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 25px;
+    color: #C4A484;
+    margin-top: 0%;
+
+    text-decoration: none;
+  }
+
+.redictLinks{
+    font-family: 'Italiana';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 25px;
+    margin-top: 0%;
+    color: #FFFFFF;
+
+}
+.background{
+    display: flex;
+    gap: 34px;
+    justify-content: center;
+    color: #FFFFFF;
+}
