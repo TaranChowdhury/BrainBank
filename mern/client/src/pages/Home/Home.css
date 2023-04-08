@@ -1,0 +1,148 @@
+body{
+    background: #3E4436;
+}
+
+
+.slogansContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;    
+}
+
+
+.slogan1{
+    /* position: center; */
+    font-family: 'Italiana';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 70px;
+    padding-bottom: 0%;
+    color: #FFFFFF;
+}
+
+.slogan2{
+    font-family: 'Italiana';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 30px;
+
+    color: #FFFFFF;
+}
+
+.Home{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.homePageContainer{
+    margin-top: 2%;
+  }
+
+
+
+.getStartedButtonD{
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding-top: 2%;
+    padding-right: 10%;
+  }
+  
+.getStartedButton{
+    color: #3E4436;
+    align-items: center;
+    appearance: none;
+    background-color: #fff;
+    border-radius: 24px;
+    border-style: none;
+    box-shadow: rgba(62,68,54 .2) 0 3px 5px -1px,rgba(62,68,54 .14) 0 6px 10px 0,rgba(62,68,54 .12) 0 1px 18px 0;
+    box-sizing: border-box;
+    color: 62,68,54;
+    cursor: pointer;
+    display: inline-flex;
+    fill: currentcolor;
+
+    font-family: 'Italiana';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 23px;
+    line-height: 30px;
+    height: 52px;
+    justify-content: center;
+    
+    
+    max-width: 100%;
+    overflow: visible;
+    padding: 2px 24px;
+    position: relative;
+    text-align: center;
+    text-transform: none;
+    transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1),opacity 15ms linear 30ms,transform 270ms cubic-bezier(0, 0, .2, 1) 0ms;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 170px;
+    will-change: transform,opacity;
+    z-index: 0;
+  }
+  
+  .getStartedButton:hover {
+    background: #F6F9FE;
+    color:#C4A484;
+  }
+  
+  .getStartedButton:active {
+    box-shadow: 0 4px 4px 0 rgb(62,68,54 / 30%), 0 8px 12px 6px rgb(60 64 67 / 15%);
+    outline: none;
+  }
+  
+  .getStartedButton:focus {
+    outline: none;
+    border: 2px solid #C4A484;
+  }
+  
+  .getStartedButton:not(:disabled) {
+    box-shadow: rgba(62,68,54, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+  }
+  
+  .getStartedButton:not(:disabled):hover {
+    box-shadow: rgba(62,68,54, .3) 0 2px 3px 0, rgba(60, 64, 67, .15) 0 6px 10px 4px;
+  }
+  
+  .getStartedButton:not(:disabled):focus {
+    box-shadow: rgba(62,68,54, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+  }
+  
+  .getStartedButton:not(:disabled):active {
+    box-shadow: rgba(62,68,54, .3) 0 4px 4px 0, rgba(60, 64, 67, .15) 0 8px 12px 6px;
+  }
+  
+  .getStartedButton:disabled {
+    box-shadow: rgba(62,68,54, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+  }
+
+
+  .socialsContainer{
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding-top: 3%;
+    padding-left: 10%;
+  }
+  
+  .insta{
+    padding: 15%;
+  }
+
+  .fb{
+    padding:15%;
+  }
+
+  .gh{
+    padding: 15%;
+  }
+  
