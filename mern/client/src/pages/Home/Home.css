@@ -135,14 +135,15 @@ body{
   }
   
   .insta{
-    padding: 15%;
+    padding: 0.5rem;
   }
 
   .fb{
-    padding:15%;
+    padding:0.5rem;
   }
 
   .gh{
-    padding: 15%;
+    padding: 0.5rem;
+    /* use em or rem */
   }
   

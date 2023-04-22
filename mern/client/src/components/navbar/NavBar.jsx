@@ -5,12 +5,12 @@ import "./NavBar.css"
 const NavBar = () => {
   return (
     <div className="navbar">
-      <h1 className="mainTitle"><Link to='/Home'>BRAIN BANK</Link></h1>
+      <Link to='/'><h1 className="mainTitle">BRAIN BANK</h1></Link>
       <div className="background"> 
-        <h1 className="redictLinks"><Link to='/OurLegacy'>Our Legacy</Link></h1>
-        <h1 className="redictLinks"><Link to='/Login'>Login</Link></h1>
-        <h1 className="redictLinks"><Link to='/SignUp'>Sign Up</Link></h1>
-        <h1 className="redictLinks"><Link to='/ContactUs'>Contact Us</Link></h1>
+        <Link to='/OurLegacy'><h1 className="redictLinks">Our Legacy</h1></Link>
+        <Link to='/Login'><h1 className="redictLinks">Login</h1></Link>
+        <Link to='/SignUp'><h1 className="redictLinks">Sign Up</h1></Link>
+        <Link to='/ContactUs'><h1 className="redictLinks">Contact Us</h1></Link>
         
       </div>     
        
