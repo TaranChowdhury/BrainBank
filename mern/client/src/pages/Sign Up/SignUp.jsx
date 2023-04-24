@@ -1,5 +1,7 @@
 import React, {useState } from "react";
 
+
+
 const SignUp = () => {
   const [first, setFirst] = useState('')
   const [last, setLast] = useState('')
@@ -33,7 +35,9 @@ const SignUp = () => {
   }
   return (
     <div>
-      <h1>SignUp</h1>
+      <div id="banner">
+        <h1 id="title">Title Text</h1>
+      </div>
       <form onSubmit = {registerUser}>
         <input 
         value={first}
