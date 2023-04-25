@@ -1,0 +1,24 @@
+#title-container {
+    background-color: white;
+    height: 100px;
+    width: 100%;
+    position: relative;
+  }
+  
+  #title-container::before {
+    content: '';
+    display: block;
+    height: 10px;
+    width: 100%;
+    background-color: white;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  #title{
+    color: green;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
