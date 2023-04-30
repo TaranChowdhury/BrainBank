@@ -22,7 +22,7 @@ const Login = () => {
       if (data.user) {
         localStorage.setItem('token', data.user)
         alert('Login successful')
-        window.location.href = '/home'
+        window.location.href = '/dashboard'
       }
       console.log(data);
     } catch (error) {
