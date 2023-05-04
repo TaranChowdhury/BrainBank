@@ -7,8 +7,6 @@ import Facebook from '../../assets/facebook.png';
 import GitHub from '../../assets/github.png';
 
 function Home() {
-
-
     return (
         <div className='Home'>
 
