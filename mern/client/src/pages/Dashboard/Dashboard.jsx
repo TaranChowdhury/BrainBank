@@ -17,31 +17,31 @@ const Dashboard = () => {
   const [results, setResults] = useState([]);
 
   const onSearch = async () => {
-    // const response = await fetch(`/api/search?q=${search}`)
-    const response = await fauxFetch({
-      results: [
-        {
-          id: 1,
-          name: 'Salesforce Secret Data'
-        },
-        {
-          id: 2,
-          name: 'Salesforce Secret Research'
-        },
-        {
-          id: 3,
-          name: 'Salesforce Secret Code'
-        },
-        {
-          id: 4,
-          name: 'Salesforce Secrete Secrete Code'
-        }
-      ]
-    })
+    const response = await fetch(`http://localhost:1337/api/projects?q=${search}`)
+    // const response = await fauxFetch({
+    //   results: [
+    //     {
+    //       id: 1,
+    //       name: 'Salesforce Secret Data'
+    //     },
+    //     {
+    //       id: 2,
+    //       name: 'Salesforce Secret Research'
+    //     },
+    //     {
+    //       id: 3,
+    //       name: 'Salesforce Secret Code'
+    //     },
+    //     {
+    //       id: 4,
+    //       name: 'Salesforce Secrete Secrete Code'
+    //     }
+    //   ]
+    // })
 
     const data = await response.json()
 
-    setResults(data.results)
+    setResults(data.projects)
   }
 
   return (
@@ -71,9 +71,9 @@ const Dashboard = () => {
       </div>
       <div className='search-results'>
         {results.map((project) => (
-          <Link key={project.id} to={`/project/${project.id}/`}>
+          <Link key={project._id} to={`/project/${project._id}/`}>
             <div className="search-result">
-              {project.name}
+              {project.title}
             </div>
           </Link>
         ))}
