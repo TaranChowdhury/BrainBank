@@ -15,6 +15,7 @@ const fauxFetch = (data) => new Promise((res) => {
 const Dashboard = () => {
   const [search, setSearch] = useState('');
   const [results, setResults] = useState([]);
+  const [isSearchActive, setIsSearchActive] = useState(false);
 
   const onSearch = async () => {
     const response = await fetch(`http://localhost:1337/api/projects?q=${search}`)
@@ -42,32 +43,46 @@ const Dashboard = () => {
     const data = await response.json()
 
     setResults(data.projects)
+    setIsSearchActive(true)
+  }
+
+  const handleSearchFocus = () => {
+    setIsSearchActive(true);
+  }
+
+  const handleSearchBlur = () => {
+    setIsSearchActive(false);
   }
 
   return (
     <div className="dashboard">
       <div className="search-bar">
-        <input className='search-input' type="text" value={search} onChange={(event) => { setSearch(event.target.value) }} />
+        <input className='search-input' type="text" value={search} onChange={(event) => { setSearch(event.target.value) }}
+          onFocus={handleSearchFocus}
+          onBlur={handleSearchBlur}
+        />
         <button className='search-button' onClick={onSearch}>Search</button>
       </div>
       <Link to='./Project'>
         <button className='project-button'>Create New Project</button>
       </Link>
-      <div classNaem='content-container'>
-        <div className="your-projects">
-          <h1>Your Projects</h1>
-        </div>
-        <div className='projects-box'>
-          <p> This is the projects box</p>
-          {/* user projects loading stuff needed */}
-        </div>
-        <div className='team'>
-          <h1>Team</h1>
-        </div>
-        <div className='team-icon'>
-          <p>Meet your team</p>
-          {/* Team Icons pop up */}
-        </div>
+      <div className='content-container'>
+        {!isSearchActive && <>
+          <div className="your-projects">
+            <h1>Your Projects</h1>
+            <div className='projects-box'>
+              <p> This is the projects box</p>
+              {/* user projects loading stuff needed */}
+            </div>
+          </div>
+          <div className='team'>
+            <h1>Team</h1>
+            <div className='team-icon'>
+              <p>Meet your team</p>
+              {/* Team Icons pop up */}
+            </div>
+          </div>
+        </>}
       </div>
       <div className='search-results'>
         {results.map((project) => (

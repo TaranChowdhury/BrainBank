@@ -85,30 +85,32 @@
 
 .content-container {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: row;
     width: 100%;
-    max-width: 1436px;
+    max-width: 1700px;
     margin-top: 1rem;
+    align-items: end;
+    margin-left: 2rem;
+    margin-top: -2.5rem;
   }
   
   .your-projects {
-    margin-top: auto;
     margin-left: auto;
-    width: 75%;
+    width: 98%;
     font-family: 'Source Serif Pro';
     color: white;
     font-size: 20px;
   }
   
   .projects-box {
-    margin-top: auto;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: auto;
-    padding: 1rem;
-    width: 75%;
-    max-width: 1126px;
-    height: 477px;
+    margin-top: -1.5rem;
+    margin-left: -.5rem;
+    padding: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 98%;
+    max-width: 1375px;
+    height: 500px;
     background-color: rgba(255, 255, 255, 0.4);
     border-radius: 40px;
     font-family: 'Source Serif Pro';
@@ -117,22 +119,22 @@
   }
   
   .team {
-    margin-top: auto;
-    margin-right: auto;
-    margin-top: 1rem;
-    width: 25%;
+    margin-top: -2rem;
+    margin-top: 0;
+    width: 26%;
     font-family: 'Source Serif Pro';
     color: white;
     font-size: 20px;
   }
   
   .team-icon {
-    margin-left: auto;
-    margin-top: auto;
-    margin-right: auto;
-    margin-bottom: auto;
-    padding: 1rem;
-    width: 291px;
+    margin-top: -1.5rem;
+    margin-left: -.5rem;
+    padding: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    width: 98%;
+    max-width: 350px;
     height: 565px;
     background-color: rgba(255, 255, 255, 0.4);
     border-radius: 40px;
