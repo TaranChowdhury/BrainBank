@@ -16,11 +16,11 @@ const Project = () => {
 
     try {
       const formData = new FormData();
-      formData.append('userId', '123'); // Replace with the actual user ID
+      formData.append('userId', 'test1@gmail.com'); // Replace with the actual user ID
       formData.append('projectTitle', projectTitle);
       formData.append('file', file);
 
-      const response = await axios.post('/api/projects', formData);
+      const response = await axios.post('http://localhost:1337/api/projects', formData);
 
       setLoading(false);
       setSuccessMessage(response.data.message);
