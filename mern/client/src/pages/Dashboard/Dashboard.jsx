@@ -18,6 +18,7 @@ const Dashboard = () => {
   const [isSearchActive, setIsSearchActive] = useState(false);
 
   const onSearch = async () => {
+    setIsSearchActive(true);
     const response = await fetch(`http://localhost:1337/api/projects?q=${search}`)
     // const response = await fauxFetch({
     //   results: [
@@ -41,59 +42,62 @@ const Dashboard = () => {
     // })
 
     const data = await response.json()
-
     setResults(data.projects)
-    setIsSearchActive(true)
   }
 
-  const handleSearchFocus = () => {
-    setIsSearchActive(true);
-  }
-
-  const handleSearchBlur = () => {
+  const handleBackClick = () => {
     setIsSearchActive(false);
   }
 
   return (
     <div className="dashboard">
       <div className="search-bar">
-        <input className='search-input' type="text" value={search} onChange={(event) => { setSearch(event.target.value) }}
-          onFocus={handleSearchFocus}
-          onBlur={handleSearchBlur}
-        />
-        <button className='search-button' onClick={onSearch}>Search</button>
+        <input className='search-input' type="text" value={search} onChange={(event) => { setSearch(event.target.value) }} />
+        <button className='search-button' onClick={onSearch} >Search</button>
       </div>
       <Link to='./Project'>
         <button className='project-button'>Create New Project</button>
       </Link>
       <div className='content-container'>
-        {!isSearchActive && <>
-          <div className="your-projects">
-            <h1>Your Projects</h1>
-            <div className='projects-box'>
-              <p> This is the projects box</p>
-              {/* user projects loading stuff needed */}
+        {!isSearchActive && (
+          <>
+            <div className="your-projects">
+              <h1>Your Projects</h1>
+              <div className='projects-box'>
+                <p> This is the projects box</p>
+                {/* user projects loading stuff needed */}
+              </div>
             </div>
-          </div>
-          <div className='team'>
-            <h1>Team</h1>
-            <div className='team-icon'>
-              <p>Meet your team</p>
-              {/* Team Icons pop up */}
+            <div className='team'>
+              <h1>Team</h1>
+              <div className='team-icon'>
+                <p>Meet your team</p>
+                {/* Team Icons pop up */}
+              </div>
             </div>
-          </div>
-        </>}
+          </>
+        )}
       </div>
-      <div className='search-results'>
-        {results.map((project) => (
-          <Link key={project._id} to={`/project/${project._id}/`}>
-            <div className="search-result">
-              {project.title}
+      <div className='content-container-2'>
+        {isSearchActive && (
+          <>
+            <div className='back'>
+              <button className='back-button' onClick={handleBackClick}>Back</button>
             </div>
-          </Link>
-        ))}
+            <div className='search-results'>
+              <p>These are the search results:</p>
+              {results.map((project) => (
+                <Link key={project._id} to={`/project/${project._id}/`}>
+                  <div className="search-result">
+                    {project.title}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </>
+        )}
       </div>
-    </div>
+    </div >
   )
 }
 export default Dashboard
