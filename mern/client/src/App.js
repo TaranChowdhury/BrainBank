@@ -21,6 +21,7 @@ function App() {
           <Route path="/" element={<Home />}></Route>
           <Route path="/ourLegacy" element={<OurLegacy />}></Route>
           <Route path="/project/:id" element={<Project />}></Route>
+          <Route path="/project/create" element={<Project />}></Route> {/* Add this line */}
           <Route path="/login" element={<Login />}></Route>
           <Route path="/signUp" element={<SignUp />}></Route>
           <Route path="/contactUs" element={<ContactUs />}></Route>
