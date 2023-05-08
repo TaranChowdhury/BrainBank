@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import "./Project.css"
 
 const Project = () => {
   const [projectTitle, setProjectTitle] = useState('');
@@ -40,11 +41,13 @@ const Project = () => {
   };
 
   return (
-    <div className="flex flex-column items-center w-full">
+    <div className="create-project">
+      <h1 className='slogan'>Let's get creative. </h1>
       <form onSubmit={handleSubmit}>
         {successMessage && <div className="text-green-500">{successMessage}</div>}
         {errorMessage && <div className="text-red-500">{errorMessage}</div>}
-        <div>
+        <div className='project-title'>
+          <p>Project Title</p>
           <label htmlFor="projectTitle">Project title:</label>
           <input
             id="projectTitle"

@@ -1,0 +1,59 @@
+.create-project {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.slogan {
+    font-family: 'La Belle Aurore';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 70px;
+    line-height: 130px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    background-color: #fff;
+}
+
+.text-green-500 {
+    color: #48bb78;
+}
+
+.text-red-500 {
+    color: #f56565;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.project-tittle {
+    width: 100%;
+}
+
+
+
+button[type="submit"] {
+    background-color: #4299e1;
+    border: none;
+    border-radius: 0.25rem;
+    color: #fff;
+    cursor: pointer;
+    padding: 0.75rem 1.5rem;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+    background-color: #2b6cb0;
+    /* You can replace this with your desired color */
+}
