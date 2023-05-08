@@ -55,9 +55,10 @@ const Dashboard = () => {
         <input className='search-input' type="text" value={search} onChange={(event) => { setSearch(event.target.value) }} />
         <button className='search-button' onClick={onSearch} >Search</button>
       </div>
-      <Link to='./Project'>
+      <Link to='/project/create'>
         <button className='project-button'>Create New Project</button>
       </Link>
+
       <div className='content-container'>
         {!isSearchActive && (
           <>
