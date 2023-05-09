@@ -70,11 +70,26 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+app.get("/api/userIds", async (req, res) => {
+  try {
+    // Assuming you have a MongoDB collection named "users" with "email" field
+    const users = await UserMatch.find({}, "User_Info.email"); // Replace "User" with your actual Mongoose model
+
+    const emails = users.map((user) => user.User_Info.email);
+
+    res.json (emails);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Something went wrong. Please try again later." });
+  }
+});
+
 app.post("/api/projects", upload.single("file"), async (req, res) => {
   const userId = req.body.userId;
   const projectTitle = req.body.projectTitle;
+  const projectSummary = req.body.projectSummary;
 
-  if (!userId || !projectTitle || !req.file) {
+  if (!userId || !projectTitle || !req.file || !projectSummary) {
     return res.status(400).send("Missing user ID, project title, or file");
   }
 
@@ -83,8 +98,10 @@ app.post("/api/projects", upload.single("file"), async (req, res) => {
     console.log(req.file.path);
     const user = await UserMatch.findOne({ "User_Info.email": userId });
 
+
     const project = await Project.create({
       title: projectTitle,
+      summary: projectSummary,
       file: {
         path: req.file.path,
         name: req.file.originalname,
