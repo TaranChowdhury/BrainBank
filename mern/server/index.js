@@ -190,6 +190,21 @@ app.get("/api/projects", async (req, res) => {
     return res.status(500).send("Internal server error");
   }
 });
+app.get("/api/projects/:projectId", async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.projectId);
+
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    res.json({ project });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 app.listen(1337, () => {
   console.log("Server started on 1337");
