@@ -9,6 +9,7 @@ import Project from "./pages/Project/Project";
 import ContactUs from "./pages/Contact Us/ContactUs";
 import NavBar from "./components/navbar/NavBar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ProjectDetails from "./pages/Project/ProjectDetails";
 
 function App() {
   return (
@@ -17,15 +18,15 @@ function App() {
       <NavBar />
       <main className="min-h-[calc(100vh-80px)]">
         <Routes>
-          {/* line 13 directs to home page */}
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/ourLegacy" element={<OurLegacy />}></Route>
-          <Route path="/project/:id" element={<Project />}></Route>
-          <Route path="/project/create" element={<Project />}></Route> {/* Add this line */}
-          <Route path="/login" element={<Login />}></Route>
-          <Route path="/signUp" element={<SignUp />}></Route>
-          <Route path="/contactUs" element={<ContactUs />}></Route>
-          <Route path="/dashBoard" element={<Dashboard />}></Route>
+          <Route path="/" element={<Home />} />
+          <Route path="/ourLegacy" element={<OurLegacy />} />
+          <Route path="/project/:id" element={<Project />} />
+          <Route path="/project/create" element={<Project />} /> {/* Add this line */}
+          <Route path="/project/:projectId/" element={<ProjectDetails />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signUp" element={<SignUp />} />
+          <Route path="/contactUs" element={<ContactUs />} />
+          <Route path="/dashBoard" element={<Dashboard />} />
         </Routes>
       </main>
       {/* <footer>

@@ -12,7 +12,7 @@ form {
 }
 
 .slogan {
-    font-family: 'La Belle Aurore';
+    font-family: "La Belle Aurore";
     font-style: normal;
     font-weight: 400;
     font-size: 70px;
@@ -20,7 +20,7 @@ form {
     display: flex;
     align-items: center;
     text-align: center;
-    background-color: #fff;
+    color: #fff;
 }
 
 .text-green-500 {
