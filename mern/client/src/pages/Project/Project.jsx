@@ -69,23 +69,23 @@ const Project = () => {
         {successMessage && <div className="text-green-500">{successMessage}</div>}
         {errorMessage && <div className="text-red-500">{errorMessage}</div>}
         <div>
-          <label htmlFor="projectTitle">Project title:</label>
-          <input
+          <label className="headers"htmlFor="projectTitle">Project Name*</label>
+          <input className="entryBoxes"
             id="projectTitle"
             type="text"
             value={projectTitle}
             onChange={(e) => setProjectTitle(e.target.value)}
           />
-          <label htmlFor="projectSummary">Project Summary:</label>
-          <input
+          <label className="headers" htmlFor="projectSummary">Project Summary</label>
+          <input className="entryBoxes"
             id="projectTittle"
             type="text"
             value={projectSummary}
             onChange={(e) => setProjectSummary(e.target.value)}
           />
         </div>
-        <div>
-          <label htmlFor="file">File:</label>
+        <div className="fileContainer">
+          <label className="headers" htmlFor="projectTittle">File*</label>
           <input id="projectTittle" type="file" onChange={handleFileChange} />
         </div>
         <div>
@@ -97,7 +97,7 @@ const Project = () => {
               </option>
             ))}
           </select>
-          <p>Selected option: {selectedOption}</p>
+          <p className="headers">Current Teammates:<br></br><br></br>{selectedOption}</p>
         </div>
         <button type="submit" disabled={loading}>
           {loading ? 'Uploading...' : 'Create project'}
