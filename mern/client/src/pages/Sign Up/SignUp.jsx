@@ -1,4 +1,5 @@
 import React, {useState } from "react";
+import "./SignUp.css"
 
 
 
@@ -34,39 +35,41 @@ const SignUp = () => {
       
   }
   return (
-    <div>
-      <div id="banner">
-        <h1 id="title">Title Text</h1>
-      </div>
+    <div className="create-project">
+      <h1 className="banner">Sign Up Here</h1>
+      <label className="headers">First Name</label>
       <form onSubmit = {registerUser}>
-        <input 
+        <input className="entryBoxes"
         value={first}
         onChange={(e) => setFirst(e.target.value)}
         type = "text"
         placeholder = "First Name"
         />
       <br />
-       <input 
+      <label className="headers">Last Name</label>
+       <input className="entryBoxes"
         value={last}
         onChange={(e) => setLast(e.target.value)}
         type = "text"
         placeholder = "Last Name"
         />
         <br />
-        <input 
+        <label className="headers">Employee Email</label>
+        <input className="entryBoxes"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         type = "email"
         placeholder = "Email"
         />
         <br />
-        <input 
+        <label className="headers">Password</label>
+        <input className="entryBoxes"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         type = "password"
         placeholder = "Password"
         />
-        <input type = "submit" value = "Register"/>
+        <input className="signup-button" type = "submit" value = "Register"/>
 
       </form>
     </div>

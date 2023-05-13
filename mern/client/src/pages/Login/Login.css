@@ -1,0 +1,56 @@
+.create-project {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.banner{
+    text-align: center;
+    width: 100%;
+    height: 8%;
+    background-color: #D9D9D9;
+    color: #3E4436;
+    font-family: 'Source Serif Pro';
+    font-style: normal;
+    font-weight: 300;
+    font-size: 50px;
+    line-height: 70px;
+    align-items: center;
+}
+
+.headers{
+    font-family: "Source Serif Pro", serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: white;
+    text-align: center;
+
+}
+
+.entryBoxes{
+    border: 1px solid white;
+    border-radius: 10px;
+    background-color: transparent;
+    color: white;
+    padding: 8px 12px 10px 12px;
+    width: 150%;
+
+}
+
+.login-button {
+    background-color: white;
+    color: green;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    width: 200px;
+
+    font-family: 'Source Serif Pro';
+    font-style: normal;
+    font-weight: 100;
+    font-size: 25px;
+    line-height: 20px;
+
+    color: #3E4436;
+  }
