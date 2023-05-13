@@ -37,6 +37,7 @@ const ProjectDetails = () => {
       <p>File name: {project.file.name}</p>
       <p>File type: {project.file.type}</p>
       <p>Created at: {new Date(project.createdAt).toLocaleString()}</p>
+      <a href={`http://localhost:1337/api/projects/${projectId}/download`}>Download File</a>
     </div>
   );
 };

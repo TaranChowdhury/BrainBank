@@ -204,6 +204,28 @@ app.get("/api/projects/:projectId", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+app.get("/api/projects/:projectId/download", async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.projectId);
+
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    // Ensure the file path is correct
+    const file = `${__dirname}/${project.file.path}`;
+
+    // Use the original name for the downloaded file
+    const filename = `${project.file.name}.${project.file.type}`;
+
+    return res.download(file, filename); 
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 
 
 app.listen(1337, () => {
