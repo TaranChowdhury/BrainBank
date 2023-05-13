@@ -84,11 +84,12 @@ const Project = () => {
             onChange={(e) => setProjectSummary(e.target.value)}
           />
         </div>
+        <label className="headers" htmlFor="projectTittle">File*</label>
         <div className="fileContainer">
-          <label className="headers" htmlFor="projectTittle">File*</label>
           <input id="projectTittle" type="file" onChange={handleFileChange} />
         </div>
         <div>
+        <label className="headers">Create Your Team</label>
           <select value={selectedOption} onChange={handleSelectChange}>
             <option value="">Add Members</option>
             {userEmails.map((email) => (
@@ -99,9 +100,13 @@ const Project = () => {
           </select>
           <p className="headers">Current Teammates:<br></br><br></br>{selectedOption}</p>
         </div>
+
+        <div className="buttonContainer">
         <button type="submit" disabled={loading}>
           {loading ? 'Uploading...' : 'Create project'}
         </button>
+        </div>
+        
       </form>
     </div>
   );

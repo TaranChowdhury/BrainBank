@@ -23,23 +23,39 @@ form {
     color: #fff;
 }
 .fileContainer{
-    background-color: #AFE0A8;
+  background-color: #AFE0A8;
   padding: 10px;
+  margin-bottom: 10%;
+  border-radius: 10px;
+
 }
 .headers{
     font-family: "Source Serif Pro", serif;
     font-size: 20px;
     font-weight: 300;
     color: white;
+    text-align: center;
 
 }
 
+option {
+    height: 40px;
+    background-color: #AFE0A8;
+    width: 200px;
+  }
+
+select {
+    height: 40px;
+    background-color: #AFE0A8;
+    width: 200px;
+}
 .entryBoxes{
     border: 1px solid white;
   border-radius: 10px;
   background-color: transparent;
   color: white;
-  padding: 8px 12px;
+  padding: 8px 12px 10px 12px;
+  margin-bottom: 20%;
 }
 .text-green-500 {
     color: #48bb78;
@@ -77,6 +93,12 @@ button[type="submit"] {
     padding: 0.75rem 1.5rem;
     margin-top: 1rem;
     transition: all 0.3s ease;
+}
+
+.buttonContainer{
+    display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 button[type="submit"]:hover:not(:disabled) {
