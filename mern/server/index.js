@@ -108,15 +108,12 @@ app.get("/api/project/:projectId/team", async (req, res) => {
   }
 });
 
-
-
-
 app.post("/api/projects", upload.single("file"), async (req, res) => {
-  const userId = req.body.userId;
+  const userId = JSON.parse(req.body.userId);
   const projectTitle = req.body.projectTitle;
   const projectSummary = req.body.projectSummary;
 
-  if (!userId || !projectTitle || !req.file || !projectSummary) {
+  if (!userId || userId.length ==0 || !projectTitle || !req.file || !projectSummary) {
     return res.status(400).send("Missing user ID, project title, or file");
   }
 
@@ -125,6 +122,7 @@ app.post("/api/projects", upload.single("file"), async (req, res) => {
     console.log(req.file.path);
     const user = await UserMatch.findOne({ "User_Info.email": userId });
 
+    console.log('User IDs:', user._id);
 
     const project = await Project.create({
       title: projectTitle,
@@ -251,9 +249,6 @@ app.get("/api/projects/:projectId/download", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
-
-
 
 app.listen(1337, () => {
   console.log("Server started on 1337");
