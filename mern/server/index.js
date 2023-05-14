@@ -147,37 +147,7 @@ app.post("/api/projects", upload.single("file"), async (req, res) => {
   }
 });
 
-// const useCallbackAdd = (x, y, callback) => {
-//     while (i < 1000000000000) {
-//         // laugh
-//     }
-//     callback(null, x + y)
-// }
 
-// useCallbackAdd(8 ,2, (err, res) => {
-//     if (err) {
-//         //
-//     }
-//     console.log(res)
-// })
-
-// console.log('dew')
-
-// const addWithPromise = (a, b) => {
-//     return new Promise((resolve, reject) => {
-//         if (!(a % 2)) {
-//             reject()
-//         }
-//         // result = // opp that takes 30 seconds
-//         resolve(result)
-//     })
-// }
-
-// addWithPromise(5, 5).then((result) => {
-//     return result + 5
-// }).then((foo) => {
-//     console.log(foo)
-// })
 
 function escapeRegex(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -216,6 +186,7 @@ app.get("/api/projects", async (req, res) => {
   }
 });
 app.get("/api/projects/:projectId", async (req, res) => {
+  
   try {
     const project = await Project.findById(req.params.projectId);
 
@@ -229,6 +200,60 @@ app.get("/api/projects/:projectId", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+app.put('/api/projects/:projectId', upload.single('file'), async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    const { summary, members } = req.body;
+
+    // Fetch the existing project
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+
+    // Update the summary array and members
+    if (summary) {
+      project.summary.push({
+        text: summary,
+        createdAt: new Date()
+      
+      });
+    }
+
+    if (members) {
+      // assuming members are being sent as an array of userIds
+      members.forEach(member => {
+        project.users.push({ userID: member });
+      });
+    }
+
+    // If a new file is uploaded, handle the file update
+    if (req.file) {
+      project.file = {
+        path: req.file.path,
+        name: req.file.originalname,
+        type: req.file.mimetype,
+      };
+    }
+
+    await project.save();
+
+    res.json({ message: 'Project updated successfully' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send('Internal server error');
+  }
+});
+
+app.get('/api/projects/:projectId', async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id).populate('users.userID');
+    res.json({ project });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 app.get("/api/projects/:projectId/download", async (req, res) => {
   try {
     const project = await Project.findById(req.params.projectId);

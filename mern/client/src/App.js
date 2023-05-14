@@ -10,6 +10,7 @@ import ContactUs from "./pages/Contact Us/ContactUs";
 import NavBar from "./components/navbar/NavBar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProjectDetails from "./pages/Project/ProjectDetails";
+import ProjectUpdate from "./pages/Project/ProjectUpdate";
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
           <Route path="/project/:id" element={<Project />} />
           <Route path="/project/create" element={<Project />} /> {/* Add this line */}
           <Route path="/project/:projectId/" element={<ProjectDetails />} />
+          <Route path="/project/:projectId/update" element={<ProjectUpdate />} />
+
           <Route path="/login" element={<Login />} />
           <Route path="/signUp" element={<SignUp />} />
           <Route path="/contactUs" element={<ContactUs />} />
