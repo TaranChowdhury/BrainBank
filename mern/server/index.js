@@ -83,6 +83,33 @@ app.get("/api/userIds", async (req, res) => {
     res.status(500).json({ error: "Something went wrong. Please try again later." });
   }
 });
+app.get('/api/user/:userId/projects', async (req, res) => {
+  const userId = req.params.userId;
+
+  // assuming you are using mongoose
+  const projects = await Project.find({ userId: userId });
+
+  res.json({ projects: projects });
+});
+app.get("/api/project/:projectId/team", async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.projectId).populate('users.userID');
+
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    const team = project.users.map(user => user.userID);
+
+    res.json({ team });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
 
 app.post("/api/projects", upload.single("file"), async (req, res) => {
   const userId = req.body.userId;
