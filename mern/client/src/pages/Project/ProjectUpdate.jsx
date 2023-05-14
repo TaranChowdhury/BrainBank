@@ -18,7 +18,7 @@ function ProjectUpdate() {
       formData.append('summary', newSummary);
       if (newFiles) {
         for (let file of newFiles) {
-          formData.append('files', file);
+          formData.append('file', file);
         }
       }
 

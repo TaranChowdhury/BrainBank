@@ -39,6 +39,7 @@ const ProjectDetails = () => {
         <div key={index}>
           <p>{summaryItem.text}</p>
           <p>{new Date(summaryItem.createdAt).toLocaleDateString()}</p>
+          
         </div>
       ))}
       <p>File name: {project.file.name}</p>
@@ -46,9 +47,21 @@ const ProjectDetails = () => {
       {project.users.map((user, index) => (
         <p key={index}>Members: {user.userID.email}</p> // Display member names
       ))}
+      <h2>Files ({project.file.length}):</h2>
+      <ul>
+      {project.file.map((file, index) => (
+        <li key={index}>
+          <p>File name: {file.name}</p>
+          <p>File type: {file.type}</p>
+          <a href={`http://localhost:1337/api/projects/${projectId}/download/${file.name}`}>
+            Download {file.name}
+          </a>
+        </li>
+      ))}
+    </ul>
       
       <p>Created at: {new Date(project.createdAt).toLocaleString()}</p>
-      <a href={`http://localhost:1337/api/projects/${projectId}/download`}>Download File</a>
+      
       <Link to={`/project/${projectId}/update`}>Update Project</Link>
     </div>
   );

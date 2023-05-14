@@ -8,11 +8,11 @@ const Project = new mongoose.Schema({
       createdAt: { type: Date, default: Date.now },
     },
   ],
-  file: {
+  file: [{
     path: { type: String, required: true },
     name: { type: String, required: true },
     type: { type: String, required: true },
-  },
+  }],
   users: [
     {
       userID: {
