@@ -11,7 +11,7 @@ const animatedComponents = makeAnimated()
 const Project = () => {
   const [projectTitle, setProjectTitle] = useState('');
   const [projectSummary, setProjectSummary] = useState('');
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -42,7 +42,9 @@ const Project = () => {
       formData.append('userId', JSON.stringify(userIds));
       formData.append('projectTitle', projectTitle);
       formData.append('projectSummary', projectSummary);
-      formData.append('file', file);
+      files.forEach((file, index) => {
+        formData.append('files', file);
+      });
 
       const response = await axios.post('http://localhost:1337/api/projects', formData);
 
@@ -51,7 +53,7 @@ const Project = () => {
       setErrorMessage('');
       setProjectTitle('');
       setProjectSummary('')
-      setFile(null);
+      setFiles([]);
     } catch (err) {
       console.error(err);
       setLoading(false);
@@ -61,7 +63,8 @@ const Project = () => {
   };
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const selectedFiles = Array.from(e.target.files);
+    setFiles(selectedFiles);
   };
 
   const handleSelectChange = (selectedOptions) => {
@@ -76,7 +79,7 @@ const Project = () => {
   return (
     <div className="create-project">
       <h1 className='slogan'>Let's get creative. </h1>
-      <form className="project-form" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         {successMessage && <div className="text-green-500">{successMessage}</div>}
         {errorMessage && <div className="text-red-500">{errorMessage}</div>}
         <div>
@@ -97,7 +100,7 @@ const Project = () => {
         </div>
         <label className="headers" htmlFor="projectTittle">File*</label>
         <div className="fileContainer">
-          <input id="projectTittle" type="file" onChange={handleFileChange} />
+          <input id="projectTittle" type="file" onChange={handleFileChange} multiple />
         </div>
         <div>
           <label className="headers">Create Your Team</label>
