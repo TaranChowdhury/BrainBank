@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom'; // Import useParams
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Import useParams
+import './Project.css';
 
 
 function ProjectUpdate() {
   const { projectId } = useParams();
+  const navigate = useNavigate();
   const [newMembers, setNewMembers] = useState('');
   const [newSummary, setNewSummary] = useState('');
   const [newFiles, setNewFiles] = useState(null);
@@ -25,7 +28,12 @@ function ProjectUpdate() {
       await axios.put(`http://localhost:1337/api/projects/${projectId}`, formData);
 
       alert("Project updated successfully!");
-      setNewSummary(''); // Clear the summary field
+
+      setNewSummary('');
+      setTimeout(() => {
+        // Redirect to dashboard after successful project creation
+        navigate('/dashboard');
+      }, 2000); // Clear the summary field
     } catch (err) {
       console.error(err);
       alert("An error occurred while updating the project.");
@@ -50,8 +58,10 @@ function ProjectUpdate() {
         onChange={(e) => setNewSummary(e.target.value)}
         placeholder="Add summary"
       />
-      <input type="file" multiple onChange={handleFileChange} />
-      <button type="submit">Update project</button>
+      <div className="buttonContainer">
+        <input type="file" multiple onChange={handleFileChange} />
+        <button type="submit">Update project</button>
+      </div>
     </form>
   );
 }
