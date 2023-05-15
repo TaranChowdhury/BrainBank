@@ -2,6 +2,7 @@ import React from 'react'
 import "./OurLegacy.css"
 import SharanyaImage from '../../assets/sharanya.jpeg';
 import TaranImage from '../../assets/taran.jpg';
+import GauthamImage from '../../assets/gautham.jpg'
 
 const OurLegacy = () => {
   return (
@@ -21,7 +22,7 @@ const OurLegacy = () => {
           </div>
 
           <div className="image-container">
-          <img className="circle-image" src={SharanyaImage} alt="Sharanya Image" />
+          <img className="circle-image" src={GauthamImage} alt="Gautham Image" />
             <div className="image-text">Gautham Naryanan </div>
           </div>
     </div>

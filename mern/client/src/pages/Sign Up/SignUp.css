@@ -19,23 +19,12 @@
   align-items: center;
 }
 
-.headers{
+.signup-header {
   font-family: "Source Serif Pro", serif;
   font-size: 20px;
   font-weight: 300;
   color: white;
-  text-align: center;
   padding: 0%;
-}
-
-.entryBoxes{
-  border: 1px solid white;
-  border-radius: 10px;
-  background-color: transparent;
-  color: white;
-  padding: 8px 12px 10px 12px;
-  width: 150%;
-
 }
 
 .signup-button {

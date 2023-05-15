@@ -126,12 +126,17 @@ app.post("/api/projects", upload.array("files"), async (req, res) => {
       type: file.originalname.split(".").pop(),
     }));
 
+    // Here's the change: wrap `projectSummary` in an object inside an array
+    const summaryArray = [{
+      text: projectSummary,
+      createdAt: new Date(),
+    }];
+
     const project = await Project.create({
       title: projectTitle,
-      summary: projectSummary,
-      files: files,  // Now an array of files
+      summary: summaryArray,  // Now an array of objects
+      file: files,  // Now an array of files
       users: [{ userID: user._id }],
-      name: req.file.originalname,
       createdAt: new Date(),
     });
 
@@ -145,6 +150,7 @@ app.post("/api/projects", upload.array("files"), async (req, res) => {
     return res.status(500).send("Internal server error");
   }
 });
+
 
 
 
