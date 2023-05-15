@@ -2,11 +2,17 @@ const mongoose = require("mongoose");
 
 const Project = new mongoose.Schema({
   title: { type: String, required: true },
-  file: {
+  summary: [
+    {
+      text: String,
+      createdAt: { type: Date, default: Date.now },
+    },
+  ],
+  file: [{
     path: { type: String, required: true },
     name: { type: String, required: true },
     type: { type: String, required: true },
-  },
+  }],
   users: [
     {
       userID: {

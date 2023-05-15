@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import Select from "react-select"
+import makeAnimated from "react-select/animated"
 import "./Project.css"
 import '../../fonts.css'
+
+const animatedComponents = makeAnimated()
 
 const Project = () => {
   const [projectTitle, setProjectTitle] = useState('');
@@ -11,7 +15,7 @@ const Project = () => {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedOptions, setSelectedOptions] = useState([]);
   const [userEmails, setUserEmails] = useState([]);
 
   useEffect(() => {
@@ -21,7 +25,7 @@ const Project = () => {
   const fetchUserEmails = async () => {
     try {
       const response = await axios.get('http://localhost:1337/api/userIds');
-      const emails = response.data;
+      const emails = response.data;  // directly assign the returned data
       setUserEmails(emails);
     } catch (error) {
       console.error(error);
@@ -34,7 +38,8 @@ const Project = () => {
 
     try {
       const formData = new FormData();
-      formData.append('userId', selectedOption); // Replace with the actual user ID
+      const userIds = selectedOptions.map((option) => option.value); // Extract email strings from selectedOptions
+      formData.append('userId', JSON.stringify(userIds));
       formData.append('projectTitle', projectTitle);
       formData.append('projectSummary', projectSummary);
       formData.append('file', file);
@@ -45,6 +50,7 @@ const Project = () => {
       setSuccessMessage(response.data.message);
       setErrorMessage('');
       setProjectTitle('');
+      setProjectSummary('')
       setFile(null);
     } catch (err) {
       console.error(err);
@@ -58,9 +64,14 @@ const Project = () => {
     setFile(e.target.files[0]);
   };
 
-  const handleSelectChange = (event) => {
-    setSelectedOption(event.target.value);
+  const handleSelectChange = (selectedOptions) => {
+    setSelectedOptions(selectedOptions);
   };
+
+  const options = userEmails.map((email) => ({
+    value: email,
+    label: email,
+  }));
 
   return (
     <div className="create-project">
@@ -69,7 +80,7 @@ const Project = () => {
         {successMessage && <div className="text-green-500">{successMessage}</div>}
         {errorMessage && <div className="text-red-500">{errorMessage}</div>}
         <div>
-          <label className="headers"htmlFor="projectTitle">Project Name*</label>
+          <label className="headers" htmlFor="projectTitle">Project Name*</label>
           <input className="entryBoxes"
             id="projectTitle"
             type="text"
@@ -89,24 +100,27 @@ const Project = () => {
           <input id="projectTittle" type="file" onChange={handleFileChange} />
         </div>
         <div>
-        <label className="headers">Create Your Team</label>
-          <select value={selectedOption} onChange={handleSelectChange}>
-            <option value="">Add Members</option>
-            {userEmails.map((email) => (
-              <option key={email} value={email}>
-                {email}
-              </option>
-            ))}
-          </select>
-          <p className="headers">Current Teammates:<br></br><br></br>{selectedOption}</p>
+          <label className="headers">Create Your Team</label>
+          <Select
+            options={options}
+            isMulti
+            isSearchable
+            value={selectedOptions}
+            onChange={handleSelectChange}
+            components={animatedComponents}
+          />
+          <p className="headers">Current Teammates:</p>
+          {selectedOptions.map((option) => (
+            <p key={option.value}>{option.label}</p>
+          ))}
         </div>
 
         <div className="buttonContainer">
-        <button type="submit" disabled={loading}>
-          {loading ? 'Uploading...' : 'Create project'}
-        </button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Uploading...' : 'Create project'}
+          </button>
         </div>
-        
+
       </form>
     </div>
   );
