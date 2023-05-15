@@ -31,28 +31,40 @@ const Login = () => {
     }
   };
   return (
-    <div className="create-project">
+   
+    <div className="login-project">
       <h1 className="banner">Login Here</h1>
+        <label className="headers">Employee Email</label>
+        <form className ="login-form" onSubmit={handleSubmit} style={{
+        width: '100%',
+        maxWidth: 500,
+        display: 'flex',
+        flexDirection: 'column'
+        
+      }}>
+          <input className="login-entryBoxes"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            type="email"
+            placeholder="Email"
+          />
 
-      <label className="headers">Employee Email</label>
-      <form onSubmit={handleSubmit}>
-        <input className="entryBoxes"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          type="email"
-          placeholder="Email"
-        />
-        <label className="headers">Password</label>
-        <input className="entryBoxes"
+        <br></br>
+        <label className="headers">Password</label>        
+        <input className="login-entryBoxes"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           type="password"
           placeholder="Password"
         />
+
+        <br></br><br></br>
         <input className="login-button" type="submit" value="Login" />
       </form>
     </div>
+  
   );
+
 };
 
 export default Login

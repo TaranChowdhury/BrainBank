@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+
+input[type="text"], input[type="password"], input[type="email"], textarea {
+  border: 1px solid white;
+  border-radius: 10px;
+  background-color: transparent;
+  color: white;
+  padding: 8px 12px 10px 12px;
+}
