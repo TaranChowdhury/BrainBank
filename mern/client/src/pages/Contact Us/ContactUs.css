@@ -1,11 +1,11 @@
-.create-project{
+.create-project {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-}
-
-.banner{
+  }
+  
+  .banner {
     text-align: center;
     width: 100%;
     height: 8%;
@@ -17,5 +17,57 @@
     font-size: 50px;
     line-height: 70px;
     align-items: center;
-}
+  }
+  
+  .message {
+    font-family: 'Source Serif Pro';
+    font-size: 24px;
+    line-height: 40px;
+    display: flex;
+    color: #FFFFFF;
+  }
+  
+  .contactus-headers {
+    font-family: "Source Serif Pro", serif;
+    font-size: 20px;
+    font-weight: 300;
+    margin: 0.5rem 0;
+    color: white;
+    text-align: left;
+  }
 
+  .nameFormat {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; /* Horizontally center the input containers */
+    width: 100%;
+  }
+  
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    margin-right: .5rem;
+  }
+  
+  .fname,
+  .lname {
+    border: 1px solid white;
+    border-radius: 10px;
+    background-color: transparent;
+    color: white;
+    /* padding: 8px 12px 10px 12px; */
+    /* width: 100%; */
+  }
+
+  .vertical-container{
+    display: flex;
+    flex-direction: column;
+    /* padding-left: 50%; */
+
+  }
+  
+  
+  
+  
+  
+  

@@ -65,7 +65,7 @@ const Project = () => {
   return (
     <div className="create-project">
       <h1 className='slogan'>Let's get creative. </h1>
-      <form onSubmit={handleSubmit}>
+      <form className="project-form" onSubmit={handleSubmit}>
         {successMessage && <div className="text-green-500">{successMessage}</div>}
         {errorMessage && <div className="text-red-500">{errorMessage}</div>}
         <div>
