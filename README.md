@@ -30,7 +30,7 @@ Follow these steps to install BrainBank and its necessary dependencies:
 
 
 3. Next, navigate to the project's frontend directory:
-   cd Mern/Client
+   cd mern/Client
 
 4. Install the frontend dependencies:
    npm install
@@ -42,7 +42,7 @@ To run BrainBank, follow these steps:
 1. Start the backend server:
 - Navigate to the backend directory:
   ```
-  cd Mern/Server
+  cd mern/server
   ```
 - Run the server:
   ```
@@ -52,7 +52,7 @@ To run BrainBank, follow these steps:
 2. Start the frontend client:
 - Navigate to the frontend directory:
   ```
-  cd ../Client
+  cd mern/client
   ```
 - Run the client:
   ```
