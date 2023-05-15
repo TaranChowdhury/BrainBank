@@ -83,34 +83,58 @@ app.get("/api/userIds", async (req, res) => {
     res.status(500).json({ error: "Something went wrong. Please try again later." });
   }
 });
+app.get('/api/user/:userId/projects', async (req, res) => {
+  const userId = req.params.userId;
 
-app.post("/api/projects", upload.single("file"), async (req, res) => {
-  const userId = req.body.userId;
+  // assuming you are using mongoose
+  const projects = await Project.find({ userId: userId });
+
+  res.json({ projects: projects });
+});
+app.get("/api/project/:projectId/team", async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.projectId).populate('users.userID');
+
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+
+    const team = project.users.map(user => user.userID);
+
+    res.json({ team });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/api/projects", upload.array("files"), async (req, res) => {
+  const userId = JSON.parse(req.body.userId);
   const projectTitle = req.body.projectTitle;
   const projectSummary = req.body.projectSummary;
 
-  if (!userId || !projectTitle || !req.file || !projectSummary) {
+  if (!userId || userId.length ==0 || !projectTitle || !req.files || req.files.length === 0 || !projectSummary) {
     return res.status(400).send("Missing user ID, project title, or file");
   }
 
   try {
-    // Create a new project document and add it to the user's project list
-    console.log(req.file.path);
     const user = await UserMatch.findOne({ "User_Info.email": userId });
 
+    const files = req.files.map(file => ({
+      path: file.path,
+      name: file.originalname,
+      type: file.originalname.split(".").pop(),
+    }));
 
     const project = await Project.create({
       title: projectTitle,
       summary: projectSummary,
-      file: {
-        path: req.file.path,
-        name: req.file.originalname,
-        type: req.file.originalname.split(".").pop(),
-      },
+      files: files,  // Now an array of files
       users: [{ userID: user._id }],
       name: req.file.originalname,
       createdAt: new Date(),
     });
+
     user.Projects.push({ projectID: project._id });
     await user.save();
 
@@ -122,37 +146,8 @@ app.post("/api/projects", upload.single("file"), async (req, res) => {
   }
 });
 
-// const useCallbackAdd = (x, y, callback) => {
-//     while (i < 1000000000000) {
-//         // laugh
-//     }
-//     callback(null, x + y)
-// }
 
-// useCallbackAdd(8 ,2, (err, res) => {
-//     if (err) {
-//         //
-//     }
-//     console.log(res)
-// })
 
-// console.log('dew')
-
-// const addWithPromise = (a, b) => {
-//     return new Promise((resolve, reject) => {
-//         if (!(a % 2)) {
-//             reject()
-//         }
-//         // result = // opp that takes 30 seconds
-//         resolve(result)
-//     })
-// }
-
-// addWithPromise(5, 5).then((result) => {
-//     return result + 5
-// }).then((foo) => {
-//     console.log(foo)
-// })
 
 function escapeRegex(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -191,6 +186,7 @@ app.get("/api/projects", async (req, res) => {
   }
 });
 app.get("/api/projects/:projectId", async (req, res) => {
+  
   try {
     const project = await Project.findById(req.params.projectId);
 
@@ -199,6 +195,107 @@ app.get("/api/projects/:projectId", async (req, res) => {
     }
 
     res.json({ project });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+app.put('/api/projects/:projectId', upload.array('file'), async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    const { summary, members } = req.body;
+
+    // Fetch the existing project
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+
+    // Update the summary array and members
+    if (summary) {
+      project.summary.push({
+        text: summary,
+        createdAt: new Date()
+      });
+    }
+
+    if (members) {
+      // assuming members are being sent as an array of userIds
+      members.forEach(member => {
+        project.users.push({ userID: member });
+      });
+    }
+
+    // If new files are uploaded, handle the file update
+    if (req.files) {
+      console.log('New file uploaded')
+      if(!project.file){
+        project.file = [];
+      }
+      req.files.forEach((file) => {
+        project.file.push({
+          path: file.path,
+          name: file.originalname,
+          type: file.mimetype,
+        });
+      });
+    }
+
+    await project.save();
+    
+    console.log('New file')
+    res.json({ message: 'Project updated successfully' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send('Internal server error');
+  }
+});
+
+
+app.get("/api/projects/:projectId/download/:filename", async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.projectId);
+
+    if (!project) {
+      return res.status(404).json({ error: "Project not found" });
+    }
+    
+
+
+    // Find the file in the files array
+    console.log("Requested filename: ", req.params.filename);
+    project.file.forEach((file, index) => {
+      if (file && file.filename) {
+        console.log("File in array at index", index, ": ", file.filename);
+      } else {
+        console.log("No filename found for file at index", index, ": ", file);
+      }
+    });
+    
+    project.file.forEach(file => {
+      console.log("File in array: ", file.name);
+    });
+    // let decodedFilename = decodeURIComponent(req.params.filename);
+    // console.log("Decoded filename: ", decodedFilename);
+    // let file = project.file.find(f => f.filename.includes(decodedFilename));
+    
+    let files = project.file.filter(f => f && f.filename);
+    let file = project.file.find(f => f.name == req.params.filename);
+
+
+
+    console.log(Array.isArray(project.file));
+
+;
+    
+    if (!file) {
+      return res.status(404).json({ error: "File not found" });
+    }
+
+    // Ensure the file path is correct
+    const filePath = `${__dirname}/${file.path}`;
+
+    return res.download(filePath, file.name); 
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
