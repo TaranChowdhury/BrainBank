@@ -5,10 +5,16 @@ import Select from "react-select"
 import makeAnimated from "react-select/animated"
 import "./Project.css"
 import '../../fonts.css'
+import { useNavigate } from 'react-router-dom';
+
+
+
 
 const animatedComponents = makeAnimated()
 
 const Project = () => {
+  const navigate = useNavigate();
+
   const [projectTitle, setProjectTitle] = useState('');
   const [projectSummary, setProjectSummary] = useState('');
   const [files, setFiles] = useState([]);
@@ -54,6 +60,11 @@ const Project = () => {
       setProjectTitle('');
       setProjectSummary('')
       setFiles([]);
+      setTimeout(() => {
+        // Redirect to dashboard after successful project creation
+        navigate('/dashboard');
+      }, 2000);
+      
     } catch (err) {
       console.error(err);
       setLoading(false);
@@ -61,6 +72,10 @@ const Project = () => {
       setErrorMessage('Something went wrong. Please try again later.');
     }
   };
+  const goBack = () => {
+    navigate('/dashboard');
+  };
+  
 
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
@@ -121,7 +136,10 @@ const Project = () => {
         <div className="buttonContainer">
           <button type="submit" disabled={loading}>
             {loading ? 'Uploading...' : 'Create project'}
+            
           </button>
+          <button onClick={goBack}>Back to Dashboard</button>
+
         </div>
 
       </form>

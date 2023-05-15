@@ -2,15 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import "./Project.css"
+import{useNavigate} from 'react-router-dom';
 
 const ProjectDetails = () => {
   const { projectId } = useParams();
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProjectDetails();
   }, []);
+  const goBack = () => {
+    navigate('/dashboard');
+  };
 
   const fetchProjectDetails = async () => {
     try {
@@ -62,7 +68,9 @@ const ProjectDetails = () => {
       
       <p>Created at: {new Date(project.createdAt).toLocaleString()}</p>
       
-      <Link to={`/project/${projectId}/update`}>Update Project</Link>
+      <Link to={`/project/${projectId}/update`}><button type="submit">Update Project</button></Link>
+      <button onClick={goBack}>Back to Dashboard</button>
+
     </div>
   );
 };
