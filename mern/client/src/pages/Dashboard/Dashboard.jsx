@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import "./Dashboard.css";
+
 
 const Dashboard = () => {
   const [search, setSearch] = useState('');
@@ -12,22 +13,22 @@ const Dashboard = () => {
   // User ID should be fetched from your auth system
   const [userId, setUserId] = useState(null);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const token = localStorage.getItem('token'); // Replace this line with the correct way to get the token in your app
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     const token = localStorage.getItem('token'); // Replace this line with the correct way to get the token in your app
 
-      const response = await fetch('http://localhost:1337/api/user', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+  //     const response = await fetch('http://localhost:1337/api/user', {
+  //       headers: {
+  //         'Authorization': `Bearer ${token}`
+  //       }
+  //     });
 
-      const data = await response.json();
-      setUserId(data.user.email);
-    };
+  //     const data = await response.json();
+  //     setUserId(data.user.email);
+  //   };
 
-    fetchUserData();
-  }, []);
+  //   fetchUserData();
+  // }, []);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -36,14 +37,14 @@ const Dashboard = () => {
       setProjects(data.projects);
     }
 
-    const fetchTeam = async () => {
-      const response = await fetch(`http://localhost:1337/api/user/${userId}/team`);
-      const data = await response.json();
-      setTeam(data.team);
-    }
+    // const fetchTeam = async () => {
+    //   const response = await fetch(`http://localhost:1337/api/user/${userId}/team`);
+    //   const data = await response.json();
+    //   setTeam(data.team);
+    // }
 
     fetchProjects();
-    fetchTeam();
+    // fetchTeam();
   }, [userId]);
 
   const onSearch = async () => {
@@ -64,6 +65,7 @@ const Dashboard = () => {
         <button className='search-button' onClick={onSearch} >Search</button>
       </div>
 
+
       <Link to='/project/create'>
         <button className='project-button'>Create New Project</button>
       </Link>
@@ -75,7 +77,12 @@ const Dashboard = () => {
               <h1>Your Projects</h1>
               <div className='projects-box'>
                 {projects.map((project) => (
-                  <Link key={project._id} to={`/project/${project._id}/`}>
+                  <Link key={project._id} to={`/project/${project._id}/`} onMouseEnter={() => {
+                    setTeam(project.users.map(({
+                      _id,
+                      userID: { User_Info }
+                    }) => ({ _id, ...User_Info })))
+                  }}>
                     <div>{project.title}</div>
                   </Link>
                 ))}
@@ -85,9 +92,9 @@ const Dashboard = () => {
             <div className='team'>
               <h1>Team</h1>
               <div className='team-icon'>
-                {team.map((member) => (
-                  <div key={member._id}>{member.name}</div>
-                ))}
+                {team.map((member) => 
+                    <div key={member._id}>{member.first} {member.last}</div>
+                  )}
               </div>
             </div>
           </>
