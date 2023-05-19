@@ -45,7 +45,7 @@ function ProjectUpdate() {
   };
 
   return (
-    <form onSubmit={handleUpdateSubmit}>
+    <form className="project-update-form " onSubmit={handleUpdateSubmit}>
       <input
         type="text"
         value={newMembers}
