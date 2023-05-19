@@ -9,16 +9,24 @@ const bcrypt = require("bcryptjs");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
+const storage = multer.memoryStorage()
+
+
 
 app.use(cors());
 app.use(express.json());
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/Alpha", {})
+  .connect(
+    "mongodb+srv://brainbank:brain@brain.mlcmo8z.mongodb.net/?retryWrites=true&w=majority",
+    { useNewUrlParser: true, useUnifiedTopology: true }
+  )
   .then(() => console.log("MongoDB connected"))
   .catch((error) => console.error(error));
 
-const upload = multer({ dest: "uploads/" }); // Set the destination folder for file uploads
+
+  const upload = multer({ storage: storage }); // Set the destination folder for file uploads
+  
 
 app.post("/api/register", async (req, res) => {
   console.log(req.body);
@@ -136,10 +144,11 @@ app.post("/api/projects", upload.array("files"), async (req, res) => {
     const user = await UserMatch.findOne({ "User_Info.email": userId });
 
     const files = req.files.map((file) => ({
-      path: file.path,
+      data: file.buffer,
       name: file.originalname,
       type: file.originalname.split(".").pop(),
     }));
+    
 
     // Here's the change: wrap `projectSummary` in an object inside an array
     const summaryArray = [
@@ -252,7 +261,7 @@ app.put("/api/projects/:projectId", upload.array("file"), async (req, res) => {
       }
       req.files.forEach((file) => {
         project.file.push({
-          path: file.path,
+          data: file.buffer,
           name: file.originalname,
           type: file.mimetype,
         });
@@ -277,41 +286,25 @@ app.get("/api/projects/:projectId/download/:filename", async (req, res) => {
       return res.status(404).json({ error: "Project not found" });
     }
 
-    // Find the file in the files array
-    console.log("Requested filename: ", req.params.filename);
-    project.file.forEach((file, index) => {
-      if (file && file.filename) {
-        console.log("File in array at index", index, ": ", file.filename);
-      } else {
-        console.log("No filename found for file at index", index, ": ", file);
-      }
-    });
-
-    project.file.forEach((file) => {
-      console.log("File in array: ", file.name);
-    });
-    // let decodedFilename = decodeURIComponent(req.params.filename);
-    // console.log("Decoded filename: ", decodedFilename);
-    // let file = project.file.find(f => f.filename.includes(decodedFilename));
-
-    let files = project.file.filter((f) => f && f.filename);
-    let file = project.file.find((f) => f.name == req.params.filename);
-
-    console.log(Array.isArray(project.file));
+    const file = project.file.find((f) => f.name == req.params.filename);
 
     if (!file) {
       return res.status(404).json({ error: "File not found" });
     }
 
-    // Ensure the file path is correct
-    const filePath = `${__dirname}/${file.path}`;
+    // Set the appropriate headers to tell the client this is a file download response
+    res.setHeader('Content-Disposition', 'attachment; filename=' + file.name);
+    res.setHeader('Content-Transfer-Encoding', 'binary');
+    res.setHeader('Content-Type', 'application/octet-stream');
 
-    return res.download(filePath, file.name);
+    // Send the file data (a Buffer) in the response
+    res.send(file.data);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 app.listen(1337, () => {
   console.log("Server started on 1337");

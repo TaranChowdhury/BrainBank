@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import "./Project.css"
+import "./ProjectDetails.css"
 import{useNavigate} from 'react-router-dom';
 
 const ProjectDetails = () => {
@@ -38,11 +39,11 @@ const ProjectDetails = () => {
   }
 
   return (
-    <div>
+    <div className="project-details">
       <h1>{project.title}</h1>
       <p>Summary:</p>
       {project.summary.map((summaryItem, index) => (
-        <div key={index}>
+        <div className="project-details" key={index}>
           <p>{summaryItem.text}</p>
           <p>{new Date(summaryItem.createdAt).toLocaleDateString()}</p>
           
