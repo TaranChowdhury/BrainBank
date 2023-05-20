@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom'; // Import useParams
-import './Project.css';
+import './ProjectUpdate.css';
 
 
 function ProjectUpdate() {
@@ -45,7 +45,7 @@ function ProjectUpdate() {
   };
 
   return (
-    <form onSubmit={handleUpdateSubmit}>
+    <form className="project-update-form " onSubmit={handleUpdateSubmit}>
       <input
         type="text"
         value={newMembers}

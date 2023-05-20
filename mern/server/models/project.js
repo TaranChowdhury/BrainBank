@@ -9,7 +9,7 @@ const Project = new mongoose.Schema({
     },
   ],
   file: [{
-    path: { type: String, required: true },
+    data: { type: Buffer, required: true },
     name: { type: String, required: true },
     type: { type: String, required: true },
   }],

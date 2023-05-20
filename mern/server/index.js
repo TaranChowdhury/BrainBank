@@ -9,16 +9,24 @@ const bcrypt = require("bcryptjs");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
+const storage = multer.memoryStorage()
+
+
 
 app.use(cors());
 app.use(express.json());
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/Alpha", {})
+  .connect(
+    "mongodb+srv://brainbank:brain@brain.mlcmo8z.mongodb.net/?retryWrites=true&w=majority",
+    { useNewUrlParser: true, useUnifiedTopology: true }
+  )
   .then(() => console.log("MongoDB connected"))
   .catch((error) => console.error(error));
 
-const upload = multer({ dest: "uploads/" }); // Set the destination folder for file uploads
+
+  const upload = multer({ storage: storage }); // Set the destination folder for file uploads
+  
 
 app.post("/api/register", async (req, res) => {
   console.log(req.body);
@@ -77,29 +85,37 @@ app.get("/api/userIds", async (req, res) => {
 
     const emails = users.map((user) => user.User_Info.email);
 
-    res.json (emails);
+    res.json(emails);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Something went wrong. Please try again later." });
+    res
+      .status(500)
+      .json({ error: "Something went wrong. Please try again later." });
   }
 });
-app.get('/api/user/:userId/projects', async (req, res) => {
+app.get("/api/user/:userId/projects", async (req, res) => {
   const userId = req.params.userId;
 
   // assuming you are using mongoose
-  const projects = await Project.find({ userId: userId });
+  const projects = await Project.find({ userId: userId }).populate({
+    path: "users",
+    populate: {
+      path: "userID",
+      select: "-_id -__v -User_Info.password -User_Info.verificationToken -Projects",
+    },
+  });
 
   res.json({ projects: projects });
 });
 app.get("/api/project/:projectId/team", async (req, res) => {
   try {
-    const project = await Project.findById(req.params.projectId).populate('users.userID');
+    const project = await Project.findById(req.params.projectId);
 
     if (!project) {
       return res.status(404).json({ error: "Project not found" });
     }
 
-    const team = project.users.map(user => user.userID);
+    const team = project.users.map((user) => user.userID);
 
     res.json({ team });
   } catch (err) {
@@ -113,29 +129,39 @@ app.post("/api/projects", upload.array("files"), async (req, res) => {
   const projectTitle = req.body.projectTitle;
   const projectSummary = req.body.projectSummary;
 
-  if (!userId || userId.length ==0 || !projectTitle || !req.files || req.files.length === 0 || !projectSummary) {
+  if (
+    !userId ||
+    userId.length == 0 ||
+    !projectTitle ||
+    !req.files ||
+    req.files.length === 0 ||
+    !projectSummary
+  ) {
     return res.status(400).send("Missing user ID, project title, or file");
   }
 
   try {
     const user = await UserMatch.findOne({ "User_Info.email": userId });
 
-    const files = req.files.map(file => ({
-      path: file.path,
+    const files = req.files.map((file) => ({
+      data: file.buffer,
       name: file.originalname,
       type: file.originalname.split(".").pop(),
     }));
+    
 
     // Here's the change: wrap `projectSummary` in an object inside an array
-    const summaryArray = [{
-      text: projectSummary,
-      createdAt: new Date(),
-    }];
+    const summaryArray = [
+      {
+        text: projectSummary,
+        createdAt: new Date(),
+      },
+    ];
 
     const project = await Project.create({
       title: projectTitle,
-      summary: summaryArray,  // Now an array of objects
-      file: files,  // Now an array of files
+      summary: summaryArray, // Now an array of objects
+      file: files, // Now an array of files
       users: [{ userID: user._id }],
       createdAt: new Date(),
     });
@@ -150,10 +176,6 @@ app.post("/api/projects", upload.array("files"), async (req, res) => {
     return res.status(500).send("Internal server error");
   }
 });
-
-
-
-
 
 function escapeRegex(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -192,7 +214,6 @@ app.get("/api/projects", async (req, res) => {
   }
 });
 app.get("/api/projects/:projectId", async (req, res) => {
-  
   try {
     const project = await Project.findById(req.params.projectId);
 
@@ -206,7 +227,7 @@ app.get("/api/projects/:projectId", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-app.put('/api/projects/:projectId', upload.array('file'), async (req, res) => {
+app.put("/api/projects/:projectId", upload.array("file"), async (req, res) => {
   try {
     const { projectId } = req.params;
     const { summary, members } = req.body;
@@ -214,33 +235,33 @@ app.put('/api/projects/:projectId', upload.array('file'), async (req, res) => {
     // Fetch the existing project
     const project = await Project.findById(projectId);
     if (!project) {
-      return res.status(404).json({ error: 'Project not found' });
+      return res.status(404).json({ error: "Project not found" });
     }
 
     // Update the summary array and members
     if (summary) {
       project.summary.push({
         text: summary,
-        createdAt: new Date()
+        createdAt: new Date(),
       });
     }
 
     if (members) {
       // assuming members are being sent as an array of userIds
-      members.forEach(member => {
+      members.forEach((member) => {
         project.users.push({ userID: member });
       });
     }
 
     // If new files are uploaded, handle the file update
     if (req.files) {
-      console.log('New file uploaded')
-      if(!project.file){
+      console.log("New file uploaded");
+      if (!project.file) {
         project.file = [];
       }
       req.files.forEach((file) => {
         project.file.push({
-          path: file.path,
+          data: file.buffer,
           name: file.originalname,
           type: file.mimetype,
         });
@@ -248,15 +269,14 @@ app.put('/api/projects/:projectId', upload.array('file'), async (req, res) => {
     }
 
     await project.save();
-    
-    console.log('New file')
-    res.json({ message: 'Project updated successfully' });
+
+    console.log("New file");
+    res.json({ message: "Project updated successfully" });
   } catch (err) {
     console.error(err);
-    return res.status(500).send('Internal server error');
+    return res.status(500).send("Internal server error");
   }
 });
-
 
 app.get("/api/projects/:projectId/download/:filename", async (req, res) => {
   try {
@@ -265,43 +285,20 @@ app.get("/api/projects/:projectId/download/:filename", async (req, res) => {
     if (!project) {
       return res.status(404).json({ error: "Project not found" });
     }
-    
 
+    const file = project.file.find((f) => f.name == req.params.filename);
 
-    // Find the file in the files array
-    console.log("Requested filename: ", req.params.filename);
-    project.file.forEach((file, index) => {
-      if (file && file.filename) {
-        console.log("File in array at index", index, ": ", file.filename);
-      } else {
-        console.log("No filename found for file at index", index, ": ", file);
-      }
-    });
-    
-    project.file.forEach(file => {
-      console.log("File in array: ", file.name);
-    });
-    // let decodedFilename = decodeURIComponent(req.params.filename);
-    // console.log("Decoded filename: ", decodedFilename);
-    // let file = project.file.find(f => f.filename.includes(decodedFilename));
-    
-    let files = project.file.filter(f => f && f.filename);
-    let file = project.file.find(f => f.name == req.params.filename);
-
-
-
-    console.log(Array.isArray(project.file));
-
-;
-    
     if (!file) {
       return res.status(404).json({ error: "File not found" });
     }
 
-    // Ensure the file path is correct
-    const filePath = `${__dirname}/${file.path}`;
+    // Set the appropriate headers to tell the client this is a file download response
+    res.setHeader('Content-Disposition', 'attachment; filename=' + file.name);
+    res.setHeader('Content-Transfer-Encoding', 'binary');
+    res.setHeader('Content-Type', 'application/octet-stream');
 
-    return res.download(filePath, file.name); 
+    // Send the file data (a Buffer) in the response
+    res.send(file.data);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
