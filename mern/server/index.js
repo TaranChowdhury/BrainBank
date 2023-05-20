@@ -360,11 +360,17 @@ app.put("/api/projects/:projectId", upload.array("file"), async (req, res) => {
 
     // If new members are added, handle the members update
     if (members) {
+      
+      
+      
       // assuming members are being sent as an array of userIds
       for (let i = 0; i < members.length; i++) {
         const member = members[i];
+        
         // Check if member is already part of the project
-        if (!project.users.some(u => u.userID.toString() === member)) {
+        if (project.users.some(u => u.userID.toString()  === member)) {
+
+          
           // Add to project
           project.users.push({ userID: member });
 
