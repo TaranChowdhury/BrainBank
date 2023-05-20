@@ -370,7 +370,6 @@ app.put("/api/projects/:projectId", upload.array("file"), async (req, res) => {
           if (user) {
             // Add the user to the project
             project.users.push({ userID: user._id });
-
             // Fetch the user's email and add project to their list
             const userEmail = user.User_Info.email;
             user.Projects.push({ projectID: project._id });
