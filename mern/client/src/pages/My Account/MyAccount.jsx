@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import {useNavigate,Link } from "react-router-dom";
+import './MyAccount.css';
 
 function MyAccount() {
   const [userData, setUserData] = useState(null);
-
+  const navigate = useNavigate();
   const loggedInUserEmail = localStorage.getItem('userEmail');
-  // Replace this with the actual logged-in user's email or ID
 
   useEffect(() => {
     fetchUserData();
@@ -20,17 +21,26 @@ function MyAccount() {
     }
   };
 
+  const handleBackClick = () => {
+    navigate('/dashboard');
+  };
+
   return (
-    <div>
+    <div className="account-container">
       {userData ? (
         <>
-          <h2>My Account</h2>
-          <p>First Name: {userData.firstName}</p>
-          <p>Last Name: {userData.lastName}</p>
-          <h3>My Projects:</h3>
-          {userData.projects.map((project) => (
-            <p key={project._id}>{project.title}</p>
-          ))}
+          <h2 className="account-title">My Account</h2>
+          <p className="account-detail">First Name: {userData.firstName}</p>
+          <p className="account-detail">Last Name: {userData.lastName}</p>
+          <h3 className="account-subtitle">My Projects:</h3>
+          <ol>
+            {userData.projects.map((project) => (
+              <li key={project._id}>
+                <Link to={`/project/${project._id}`} className="project-link">{project.title}</Link>
+              </li>
+            ))}
+          </ol>
+          <button type="button" onClick={handleBackClick}>Back to Dashboard</button>
         </>
       ) : (
         <p>Loading...</p>
