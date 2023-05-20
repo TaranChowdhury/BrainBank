@@ -22,14 +22,16 @@
     text-align: center;
     color: #fff;
 }
-.fileContainer{
-  background-color: #AFE0A8;
-  padding: 10px;
-  margin-bottom: 10%;
-  border-radius: 10px;
+
+.fileContainer {
+    background-color: #AFE0A8;
+    padding: 10px;
+    margin-bottom: 10%;
+    border-radius: 10px;
 
 }
-.headers{
+
+.headers {
     font-family: "Source Serif Pro", serif;
     font-size: 20px;
     font-weight: 300;
@@ -42,21 +44,23 @@ option {
     height: 40px;
     background-color: #AFE0A8;
     width: 200px;
-  }
+}
 
-select{
+select {
     height: 40px;
     background-color: #AFE0A8;
     width: 200px;
 }
-.entryBoxes{
+
+.entryBoxes {
     border: 1px solid white;
-  border-radius: 10px;
-  background-color: transparent;
-  color: white;
-  padding: 8px 12px 10px 12px;
-  margin-bottom: 20%;
+    border-radius: 10px;
+    background-color: transparent;
+    color: white;
+    padding: 8px 12px 10px 12px;
+    margin-bottom: 20%;
 }
+
 .text-green-500 {
     color: #48bb78;
 }
@@ -75,14 +79,8 @@ label {
     background-color: #AFE0A8;
     color: #3E4436;
     padding: 10px;
-    
+
 }
-
-/* input[type="file"] {
-    display: none;
-} */
-
-
 
 button[type="submit"] {
     background-color: #4299e1;
@@ -95,13 +93,41 @@ button[type="submit"] {
     transition: all 0.3s ease;
 }
 
-.buttonContainer{
+button[type="button"] {
+    background-color: #4299e1;
+    border: none;
+    border-radius: 2rem;
+    color: #fff;
+    cursor: pointer;
+    padding: 0.75rem 1rem;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+.buttonContainer {
     display: flex;
-  justify-content: center;
-  align-items: center;
+    justify-content: center;
+    align-items: center;
 }
 
 button[type="submit"]:hover:not(:disabled) {
     background-color: #2b6cb0;
-    /* You can replace this with your desired color */
+}
+
+button[type="button"]:hover {
+    background-color: #2b6cb0;
+}
+
+.file-input-label {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+/* File input box */
+.file-input {
+    font-family: "Source Serif pro";
+    font-size: 1.1rem;
+    font-weight: 200;
+    border: 1px solid #b7e0a8;
+    text-align: center;
 }

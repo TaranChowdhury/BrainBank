@@ -7,9 +7,6 @@ import "./Project.css"
 import '../../fonts.css'
 import { useNavigate } from 'react-router-dom';
 
-
-
-
 const animatedComponents = makeAnimated()
 
 const Project = () => {
@@ -75,7 +72,6 @@ const Project = () => {
   const goBack = () => {
     navigate('/dashboard');
   };
-  
 
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
@@ -115,7 +111,7 @@ const Project = () => {
         </div>
         <label className="headers" htmlFor="projectTittle">File*</label>
         <div className="fileContainer">
-          <input id="projectTittle" type="file" onChange={handleFileChange} multiple />
+          <input className="file-input" id="projectTittle" type="file" onChange={handleFileChange} multiple />
         </div>
         <div>
           <label className="headers">Create Your Team</label>
@@ -136,9 +132,8 @@ const Project = () => {
         <div className="buttonContainer">
           <button type="submit" disabled={loading}>
             {loading ? 'Uploading...' : 'Create project'}
-            
           </button>
-          <button onClick={goBack}>Back to Dashboard</button>
+          <button type="button" onClick={goBack}>Back to Dashboard</button>
 
         </div>
 

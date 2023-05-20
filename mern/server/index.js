@@ -25,8 +25,8 @@ mongoose
   .catch((error) => console.error(error));
 
 
-  const upload = multer({ storage: storage }); // Set the destination folder for file uploads
-  
+const upload = multer({ storage: storage }); // Set the destination folder for file uploads
+
 
 app.post("/api/register", async (req, res) => {
   console.log(req.body);
@@ -148,7 +148,7 @@ app.post("/api/projects", upload.array("files"), async (req, res) => {
       name: file.originalname,
       type: file.originalname.split(".").pop(),
     }));
-    
+
 
     // Here's the change: wrap `projectSummary` in an object inside an array
     const summaryArray = [
@@ -246,7 +246,7 @@ app.put("/api/projects/:projectId", upload.array("file"), async (req, res) => {
       });
     }
 
-    if (members) {
+    if (Array.isArray(members)) {
       // assuming members are being sent as an array of userIds
       members.forEach((member) => {
         project.users.push({ userID: member });

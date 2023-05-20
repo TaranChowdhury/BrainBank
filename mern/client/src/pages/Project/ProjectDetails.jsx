@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import "./Project.css"
 import "./ProjectDetails.css"
 import{useNavigate} from 'react-router-dom';
@@ -17,6 +16,9 @@ const ProjectDetails = () => {
   }, []);
   const goBack = () => {
     navigate('/dashboard');
+  };
+  const handleUpdateClick = () => {
+    navigate(`/project/${projectId}/update`, { state: { prevPath: `/project/${projectId}` } });
   };
 
   const fetchProjectDetails = async () => {
@@ -49,8 +51,6 @@ const ProjectDetails = () => {
           
         </div>
       ))}
-      <p>File name: {project.file.name}</p>
-      <p>File type: {project.file.type}</p>
       {project.users.map((user, index) => (
         <p key={index}>Members: {user.userID.email}</p> // Display member names
       ))}
@@ -69,7 +69,7 @@ const ProjectDetails = () => {
       
       <p>Created at: {new Date(project.createdAt).toLocaleString()}</p>
       
-      <Link to={`/project/${projectId}/update`}><button type="submit">Update Project</button></Link>
+      <button type="submit" onClick={handleUpdateClick}>Update Project</button>
       <button onClick={goBack}>Back to Dashboard</button>
 
     </div>
