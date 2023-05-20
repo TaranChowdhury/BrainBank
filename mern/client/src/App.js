@@ -4,6 +4,7 @@ import Home from "./pages/Home/Home.jsx";
 import SignUp from "./pages/Sign Up/SignUp";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Login from "./pages/Login/Login";
+import MyAccount from "./pages/My Account/MyAccount";
 import OurLegacy from "./pages/Our Legacy/OurLegacy";
 import Project from "./pages/Project/Project";
 import ContactUs from "./pages/Contact Us/ContactUs";
@@ -25,9 +26,11 @@ function App() {
           <Route path="/project/create" element={<Project />} /> {/* Add this line */}
           <Route path="/project/:projectId/" element={<ProjectDetails />} />
           <Route path="/project/:projectId/update" element={<ProjectUpdate />} />
+          <Route path='/MyAccount' element={<MyAccount />} />
 
           <Route path="/login" element={<Login />} />
           <Route path="/signUp" element={<SignUp />} />
+
           <Route path="/contactUs" element={<ContactUs />} />
           <Route path="/dashBoard" element={<Dashboard />} />
         </Routes>

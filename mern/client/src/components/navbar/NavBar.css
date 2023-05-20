@@ -72,8 +72,9 @@ a:link {
     line-height: 25px;
     margin-top: 0%;
     color: #FFFFFF;
-
+    cursor: pointer;
 }
+
 .background{
     display: flex;
     gap: 34px;
