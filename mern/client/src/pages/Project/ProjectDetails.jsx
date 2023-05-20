@@ -53,6 +53,7 @@ const ProjectDetails = () => {
           
         </div>
       ))}
+       <p>Members:</p>
       {project.users.map((user, index) => (
         <p key={index}>Members: {user.userID.email}</p> // Display member names
       ))}

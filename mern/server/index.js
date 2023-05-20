@@ -81,10 +81,10 @@ app.post("/api/login", async (req, res) => {
 });
 function authenticateJWT(req, res, next) {
   const authHeader = req.header('Authorization');
-  
+
   if (authHeader) {
     const token = authHeader.split(' ')[1];  // Splitting by space and using the token part
-    
+
     jwt.verify(token, 'secret123', (err, user) => {
       if (err) {
         return res.sendStatus(403);
@@ -120,8 +120,8 @@ app.get("/api/user/me", async (req, res) => {
 
 app.get("/api/userIds", async (req, res) => {
   try {
-    
-    const users = await UserMatch.find({}, "User_Info.email"); 
+
+    const users = await UserMatch.find({}, "User_Info.email");
 
     const emails = users.map((user) => user.User_Info.email);
 
@@ -235,7 +235,7 @@ app.post("/api/projects", upload.array("files"), async (req, res) => {
 app.put("/api/user/me", async (req, res) => {
   try {
     const token = req.header('Authorization');
-    if(!token) return res.status(401).json({ error: 'Missing authentication token' });
+    if (!token) return res.status(401).json({ error: 'Missing authentication token' });
 
     const decoded = jwt.verify(token, 'secret123');
     const userEmail = decoded.email;
@@ -315,7 +315,9 @@ app.put("/api/projects/:projectId", upload.array("file"), async (req, res) => {
   try {
     const { projectId } = req.params;
     const { summary, members } = req.body;
+    const parsedMembers = JSON.parse(members);
 
+    console.log({ members });
     // Fetch the existing project
     const project = await Project.findById(projectId);
     if (!project) {
@@ -330,11 +332,14 @@ app.put("/api/projects/:projectId", upload.array("file"), async (req, res) => {
       });
     }
 
-    if (Array.isArray(members)) {
+    if (Array.isArray(parsedMembers)) {
       // assuming members are being sent as an array of userIds
-      members.forEach((member) => {
-        project.users.push({ userID: member });
-      });
+      for (const memberEmail of parsedMembers) {
+        const user = await UserMatch.findOne({ "User_Info.email": memberEmail });
+        if (user) {
+          project.users.push({ userID: user._id });
+        }
+      }
     }
 
 

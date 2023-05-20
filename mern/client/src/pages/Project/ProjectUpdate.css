@@ -80,3 +80,10 @@ button[type="button"]:hover {
     text-align: center;
 }
 
+.DropDown {
+    color: black;
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+
