@@ -44,16 +44,22 @@ const Project = () => {
 
     try {
       const formData = new FormData();
-      const userIds = selectedOptions.map((option) => option.value); // Extract email strings from selectedOptions
+      const userIds = selectedOptions.map((option) => option.value); 
       formData.append('userId', JSON.stringify(userIds));
       formData.append('projectTitle', projectTitle);
       formData.append('projectSummary', projectSummary);
       files.forEach((file, index) => {
         formData.append('files', file);
       });
-
-      const response = await axios.post('http://localhost:1337/api/projects', formData);
-
+  
+      const userToken = localStorage.getItem('userToken'); // Get the user's token
+  
+      const response = await axios.post('http://localhost:1337/api/projects', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${userToken}` // Include the user's token in the headers
+        }
+      });
       setLoading(false);
       setSuccessMessage(response.data.message);
       setErrorMessage('');

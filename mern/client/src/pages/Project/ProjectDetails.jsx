@@ -8,6 +8,7 @@ import{useNavigate} from 'react-router-dom';
 
 const ProjectDetails = () => {
   const { projectId } = useParams();
+  const{userId} = useParams(); // Add this line
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -21,7 +22,8 @@ const ProjectDetails = () => {
 
   const fetchProjectDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:1337/api/projects/${projectId}`);
+      const response = await axios.get(`http://localhost:1337/api/projects/${projectId}?userId=${userId}`);
+
       setProject(response.data.project);
       setLoading(false);
     } catch (error) {

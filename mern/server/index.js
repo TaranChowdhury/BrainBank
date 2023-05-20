@@ -70,18 +70,56 @@ app.post("/api/login", async (req, res) => {
   );
 
   if (isPasswordValid) {
-    const token = jwt.sign({ email: user.User_Info.email }, "secret123");
+    // Here we create a JWT token using the user's email and a secret key
+    // We set the token to expire in 1 hour (3600 seconds)
+    const token = jwt.sign({ email: user.User_Info.email }, "secret123", { expiresIn: '1h' });
 
     return res.json({ status: "ok", user: token });
   } else {
     return res.json({ status: "error", user: false });
   }
 });
+function authenticateJWT(req, res, next) {
+  const authHeader = req.header('Authorization');
+  
+  if (authHeader) {
+    const token = authHeader.split(' ')[1];  // Splitting by space and using the token part
+    
+    jwt.verify(token, 'secret123', (err, user) => {
+      if (err) {
+        return res.sendStatus(403);
+      }
+
+      req.user = user;
+      next();
+    });
+  } else {
+    res.sendStatus(401);
+  }
+};
+
+app.get("/api/user/me", async (req, res) => {
+  try {
+    const token = req.header('Authorization');
+    if (!token) return res.status(401).json({ error: 'Missing authentication token' });
+
+    const decoded = jwt.verify(token, 'secret123');
+    const userEmail = decoded.email;
+
+    const user = await UserMatch.findOne({ "User_Info.email": userEmail });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    res.json({ status: 'ok', user: user.User_Info });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 app.get("/api/userIds", async (req, res) => {
   try {
-    // Assuming you have a MongoDB collection named "users" with "email" field
-    const users = await UserMatch.find({}, "User_Info.email"); // Replace "User" with your actual Mongoose model
+    
+    const users = await UserMatch.find({}, "User_Info.email"); 
 
     const emails = users.map((user) => user.User_Info.email);
 
@@ -124,33 +162,30 @@ app.get("/api/project/:projectId/team", async (req, res) => {
   }
 });
 
+
 app.post("/api/projects", upload.array("files"), async (req, res) => {
-  const userId = JSON.parse(req.body.userId);
+  const userIds = JSON.parse(req.body.userId); // now expecting an array of userIds
   const projectTitle = req.body.projectTitle;
   const projectSummary = req.body.projectSummary;
 
   if (
-    !userId ||
-    userId.length == 0 ||
+    !userIds ||
+    userIds.length == 0 ||
     !projectTitle ||
     !req.files ||
     req.files.length === 0 ||
     !projectSummary
   ) {
-    return res.status(400).send("Missing user ID, project title, or file");
+    return res.status(400).send("Missing user IDs, project title, or file");
   }
 
   try {
-    const user = await UserMatch.findOne({ "User_Info.email": userId });
-
     const files = req.files.map((file) => ({
       data: file.buffer,
       name: file.originalname,
       type: file.originalname.split(".").pop(),
     }));
-    
 
-    // Here's the change: wrap `projectSummary` in an object inside an array
     const summaryArray = [
       {
         text: projectSummary,
@@ -158,16 +193,32 @@ app.post("/api/projects", upload.array("files"), async (req, res) => {
       },
     ];
 
+    // Preparing the users array for the Project schema
+    let users = [];
+    for (let i = 0; i < userIds.length; i++) {
+      const user = await UserMatch.findOne({ "User_Info.email": userIds[i] });
+      if (user) {
+        users.push({ userID: user._id });
+      }
+    }
+
+    // Create the project first
     const project = await Project.create({
       title: projectTitle,
-      summary: summaryArray, // Now an array of objects
-      file: files, // Now an array of files
-      users: [{ userID: user._id }],
+      summary: summaryArray,
+      file: files,
+      users: users, // now an array of users
       createdAt: new Date(),
     });
 
-    user.Projects.push({ projectID: project._id });
-    await user.save();
+    // Now, loop through the users again and add the project to their Projects array
+    for (let i = 0; i < users.length; i++) {
+      const user = await UserMatch.findOne({ _id: users[i].userID });
+      if (user) {
+        user.Projects.push({ projectID: project._id });
+        await user.save();
+      }
+    }
 
     console.log(`Project created successfully with title "${projectTitle}"`);
     return res.json({ message: "Project created successfully" });
@@ -176,6 +227,37 @@ app.post("/api/projects", upload.array("files"), async (req, res) => {
     return res.status(500).send("Internal server error");
   }
 });
+
+
+
+app.put("/api/user/me", async (req, res) => {
+  try {
+    const token = req.header('Authorization');
+    if(!token) return res.status(401).json({ error: 'Missing authentication token' });
+
+    const decoded = jwt.verify(token, 'secret123');
+    const userEmail = decoded.email;
+
+    const user = await UserMatch.findOne({ "User_Info.email": userEmail });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const allowedUpdates = ['first', 'last', 'email'];
+    const updates = Object.keys(req.body);
+
+    updates.forEach(update => {
+      if (!allowedUpdates.includes(update)) return res.status(400).json({ error: `Invalid update: ${update}` });
+    });
+
+    updates.forEach(update => user.User_Info[update] = req.body[update]);
+    await user.save();
+
+    res.json({ status: 'ok', user: user.User_Info });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 function escapeRegex(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -286,25 +368,41 @@ app.get("/api/projects/:projectId/download/:filename", async (req, res) => {
       return res.status(404).json({ error: "Project not found" });
     }
 
-    const file = project.file.find((f) => f.name == req.params.filename);
+    // Find the file in the files array
+    console.log("Requested filename: ", req.params.filename);
+    project.file.forEach((file, index) => {
+      if (file && file.filename) {
+        console.log("File in array at index", index, ": ", file.filename);
+      } else {
+        console.log("No filename found for file at index", index, ": ", file);
+      }
+    });
+
+    project.file.forEach((file) => {
+      console.log("File in array: ", file.name);
+    });
+    // let decodedFilename = decodeURIComponent(req.params.filename);
+    // console.log("Decoded filename: ", decodedFilename);
+    // let file = project.file.find(f => f.filename.includes(decodedFilename));
+
+    let files = project.file.filter((f) => f && f.filename);
+    let file = project.file.find((f) => f.name == req.params.filename);
+
+    console.log(Array.isArray(project.file));
 
     if (!file) {
       return res.status(404).json({ error: "File not found" });
     }
 
-    // Set the appropriate headers to tell the client this is a file download response
-    res.setHeader('Content-Disposition', 'attachment; filename=' + file.name);
-    res.setHeader('Content-Transfer-Encoding', 'binary');
-    res.setHeader('Content-Type', 'application/octet-stream');
+    // Ensure the file path is correct
+    const filePath = `${__dirname}/${file.buffer}`;
 
-    // Send the file data (a Buffer) in the response
-    res.send(file.data);
+    return res.download(filePath, file.name);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 app.listen(1337, () => {
   console.log("Server started on 1337");
