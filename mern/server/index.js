@@ -364,13 +364,15 @@ app.put("/api/projects/:projectId", upload.array("file"), async (req, res) => {
       for (let i = 0; i < members.length; i++) {
         const member = members[i];
         // Check if member is already part of the project
-        if (!project.users.some(u => u.userID.toString() === member)) {
-          // Add to project
-          project.users.push({ userID: member });
-
-          // Fetch the user and add project to their list
+        if (!project.users.some(user => user.userID?.User_Info?.email === member)) {
+          // Fetch the user by email
           const user = await UserMatch.findOne({ "User_Info.email": member });
           if (user) {
+            // Add the user to the project
+            project.users.push({ userID: user._id });
+
+            // Fetch the user's email and add project to their list
+            const userEmail = user.User_Info.email;
             user.Projects.push({ projectID: project._id });
             await user.save();
           }
@@ -448,10 +450,10 @@ app.get('/api/users/:email', async (req, res) => {
     const projects = [];
     for (let proj of user.Projects) {
       const project = await Project.findById(proj.projectID);
-    if (project !== null) {
-      projects.push(project);
-  }
-}
+      if (project !== null) {
+        projects.push(project);
+      }
+    }
 
 
     // Prepare user data for response
