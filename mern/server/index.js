@@ -253,6 +253,7 @@ app.put("/api/projects/:projectId", upload.array("file"), async (req, res) => {
       });
     }
 
+
     // If new files are uploaded, handle the file update
     if (req.files) {
       console.log("New file uploaded");
@@ -268,15 +269,35 @@ app.put("/api/projects/:projectId", upload.array("file"), async (req, res) => {
       });
     }
 
+    // If new members are added, handle the members update
+    if (members) {
+      // assuming members are being sent as an array of userIds
+      for (let i = 0; i < members.length; i++) {
+        const member = members[i];
+        // Check if member is already part of the project
+        if (!project.users.some(u => u.userID.toString() === member)) {
+          // Add to project
+          project.users.push({ userID: member });
+
+          // Fetch the user and add project to their list
+          const user = await UserMatch.findOne({ "User_Info.email": member });
+          if (user) {
+            user.Projects.push({ projectID: project._id });
+            await user.save();
+          }
+        }
+      }
+    }
+
     await project.save();
 
-    console.log("New file");
     res.json({ message: "Project updated successfully" });
   } catch (err) {
     console.error(err);
     return res.status(500).send("Internal server error");
   }
 });
+
 
 app.get("/api/projects/:projectId/download/:filename", async (req, res) => {
   try {
@@ -304,6 +325,40 @@ app.get("/api/projects/:projectId/download/:filename", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+app.get('/api/users/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    // Fetch user data by email
+    const user = await UserMatch.findOne({ "User_Info.email": email });
+
+    // If no user found, send 404 status
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Fetch user's projects using the project IDs stored in the user document
+    const projects = [];
+    for (let proj of user.Projects) {
+      const project = await Project.findById(proj.projectID);
+      projects.push(project);
+    }
+
+    // Prepare user data for response
+    const userData = {
+      firstName: user.User_Info.first_name,
+      lastName: user.User_Info.last_name,
+      projects: projects.map((project) => ({ _id: project._id, title: project.title })),
+    };
+
+    // Send user data
+    res.json(userData);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 
 app.listen(1337, () => {
