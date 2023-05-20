@@ -377,6 +377,11 @@ app.put("/api/projects/:projectId", upload.array("file"), async (req, res) => {
           // Fetch the user and add project to their list
           const user = await UserMatch.findOne({ "User_Info.email": member });
           if (user) {
+            // Add the user to the project
+            project.users.push({ userID: user._id });
+
+            // Fetch the user's email and add project to their list
+            const userEmail = user.User_Info.email;
             user.Projects.push({ projectID: project._id });
             await user.save();
           }
@@ -454,10 +459,10 @@ app.get('/api/users/:email', async (req, res) => {
     const projects = [];
     for (let proj of user.Projects) {
       const project = await Project.findById(proj.projectID);
-    if (project !== null) {
-      projects.push(project);
-  }
-}
+      if (project !== null) {
+        projects.push(project);
+      }
+    }
 
 
     // Prepare user data for response
