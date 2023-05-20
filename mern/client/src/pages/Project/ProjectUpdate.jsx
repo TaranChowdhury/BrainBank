@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom'; // Import useParams
+import { useNavigate, useLocation } from 'react-router-dom'; // Import useParams
 import './ProjectUpdate.css';
-
 
 function ProjectUpdate() {
   const { projectId } = useParams();
@@ -11,6 +10,8 @@ function ProjectUpdate() {
   const [newMembers, setNewMembers] = useState('');
   const [newSummary, setNewSummary] = useState('');
   const [newFiles, setNewFiles] = useState(null);
+  const location = useLocation();
+  const { prevPath } = location.state || { prevPath: '/dashboard' };
 
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
@@ -44,6 +45,10 @@ function ProjectUpdate() {
     setNewFiles(e.target.files);
   };
 
+  const goBack = () => {
+    navigate(prevPath);
+  };
+
   return (
     <form className="project-update-form " onSubmit={handleUpdateSubmit}>
       <input
@@ -59,8 +64,9 @@ function ProjectUpdate() {
         placeholder="Add summary"
       />
       <div className="buttonContainer">
-        <input type="file" multiple onChange={handleFileChange} />
+        <input className="file-input" type="file" multiple onChange={handleFileChange} />
         <button type="submit">Update project</button>
+        <button type="button" onClick={goBack}>Back to Dashboard</button>
       </div>
     </form>
   );
