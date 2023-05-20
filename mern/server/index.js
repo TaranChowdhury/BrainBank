@@ -360,12 +360,21 @@ app.put("/api/projects/:projectId", upload.array("file"), async (req, res) => {
 
     // If new members are added, handle the members update
     if (members) {
+      
+      
+      
       // assuming members are being sent as an array of userIds
       for (let i = 0; i < members.length; i++) {
         const member = members[i];
+        
         // Check if member is already part of the project
-        if (!project.users.some(user => user.userID?.User_Info?.email === member)) {
-          // Fetch the user by email
+        if (project.users.some(u => u.userID.toString()  === member)) {
+
+          
+          // Add to project
+          project.users.push({ userID: member });
+
+          // Fetch the user and add project to their list
           const user = await UserMatch.findOne({ "User_Info.email": member });
           if (user) {
             // Add the user to the project
