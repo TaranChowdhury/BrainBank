@@ -97,6 +97,41 @@ function authenticateJWT(req, res, next) {
     res.sendStatus(401);
   }
 };
+app.get('/api/users/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+    console.log(email);
+
+    // Fetch user data by email
+    const user = await UserMatch.findOne({ "User_Info.email": email });
+
+    // If no user found, send 404 status
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Fetch user's projects using the project IDs stored in the user document
+    const projects = [];
+    for (let proj of user.Projects) {
+      const project = await Project.findById(proj.projectID);
+      projects.push(project);
+    }
+
+    // Prepare user data for response
+    const userData = {
+      firstName: user.User_Info.first,
+      lastName: user.User_Info.last,
+      projects: projects.map((project) => ({ _id: project._id, title: project.title })),
+    };
+
+    // Send user data
+    res.json(userData);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 app.get("/api/user/me", async (req, res) => {
   try {
@@ -424,39 +459,7 @@ app.get("/api/projects/:projectId/download/:filename", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-app.get('/api/users/:email', async (req, res) => {
-  try {
-    const { email } = req.params;
 
-    // Fetch user data by email
-    const user = await UserMatch.findOne({ "User_Info.email": email });
-
-    // If no user found, send 404 status
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    // Fetch user's projects using the project IDs stored in the user document
-    const projects = [];
-    for (let proj of user.Projects) {
-      const project = await Project.findById(proj.projectID);
-      projects.push(project);
-    }
-
-    // Prepare user data for response
-    const userData = {
-      firstName: user.User_Info.first_name,
-      lastName: user.User_Info.last_name,
-      projects: projects.map((project) => ({ _id: project._id, title: project.title })),
-    };
-
-    // Send user data
-    res.json(userData);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-});
 
 
 app.listen(1337, () => {

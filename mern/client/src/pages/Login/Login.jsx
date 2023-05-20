@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import "./Login.css"
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -22,8 +24,10 @@ const Login = () => {
       const data = await response.json();
       if (data.user) {
         localStorage.setItem('token', data.user)
+        localStorage.setItem('userEmail', email);
+        console.log(localStorage.getItem('userEmail'))
         alert('Login successful')
-        window.location.href = '/dashboard'
+        navigate('/dashboard');
       }
       console.log(data);
     } catch (error) {
