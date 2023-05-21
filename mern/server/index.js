@@ -360,24 +360,26 @@ app.put("/api/projects/:projectId", upload.array("file"), async (req, res) => {
 
     // If new members are added, handle the members update
     if (members) {
-      // assuming members are being sent as an array of userIds
       for (let i = 0; i < members.length; i++) {
-        const member = members[i];
-        // Check if member is already part of the project
-        if (!project.users.some(user => user.userID?.User_Info?.email === member)) {
-          // Fetch the user by email
-          const user = await UserMatch.findOne({ "User_Info.email": member });
-          if (user) {
+        const memberEmail = members[i];
+        const userToAdd = await UserMatch.findOne({ "User_Info.email": memberEmail });
+    
+        if (userToAdd) {
+          // Check if this user is already a part of the project
+          const isUserAlreadyInProject = project.users.some(user => user.userID.toString() === userToAdd._id.toString());
+          
+          if (!isUserAlreadyInProject) {
             // Add the user to the project
-            project.users.push({ userID: user._id });
-            // Fetch the user's email and add project to their list
-            const userEmail = user.User_Info.email;
-            user.Projects.push({ projectID: project._id });
-            await user.save();
+            project.users.push({ userID: userToAdd._id });
+    
+            // Add project to the user's list
+            userToAdd.Projects.push({ projectID: project._id });
+            await userToAdd.save();
           }
         }
       }
     }
+    
 
     await project.save();
 
@@ -397,41 +399,28 @@ app.get("/api/projects/:projectId/download/:filename", async (req, res) => {
       return res.status(404).json({ error: "Project not found" });
     }
 
-    // Find the file in the files array
-    console.log("Requested filename: ", req.params.filename);
-    project.file.forEach((file, index) => {
-      if (file && file.filename) {
-        console.log("File in array at index", index, ": ", file.filename);
-      } else {
-        console.log("No filename found for file at index", index, ": ", file);
-      }
-    });
-
-    project.file.forEach((file) => {
-      console.log("File in array: ", file.name);
-    });
-    // let decodedFilename = decodeURIComponent(req.params.filename);
-    // console.log("Decoded filename: ", decodedFilename);
-    // let file = project.file.find(f => f.filename.includes(decodedFilename));
-
-    let files = project.file.filter((f) => f && f.filename);
     let file = project.file.find((f) => f.name == req.params.filename);
-
-    console.log(Array.isArray(project.file));
 
     if (!file) {
       return res.status(404).json({ error: "File not found" });
     }
 
-    // Ensure the file path is correct
-    const filePath = `${__dirname}/${file.buffer}`;
+    // Set the Content-Disposition to "attachment" to trigger a download
+    // Also specify the filename here
+    res.set('Content-Disposition', 'attachment; filename=' + file.name);
 
-    return res.download(filePath, file.name);
+    // The file.buffer here should be a buffer representing the file data
+    // You should set the appropriate Content-Type for the file before sending the buffer
+    res.set('Content-Type', `application/${file.type}`);
+    res.send(file.data);
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
 app.get('/api/users/:email', async (req, res) => {
   try {
     const { email } = req.params;

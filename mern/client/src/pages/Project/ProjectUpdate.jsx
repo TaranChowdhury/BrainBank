@@ -17,10 +17,25 @@ function ProjectUpdate() {
   const [newFiles, setNewFiles] = useState(null);
   const location = useLocation();
   const { prevPath } = location.state || { prevPath: '/dashboard' };
+  const [projectUserEmails, setProjectUserEmails] = useState([]);
+
 
   useEffect(() => {
     fetchUserEmails();
+    fetchProjectUsers();
   }, []);
+  const fetchProjectUsers = async () => {
+    try {
+      const response = await axios.get(`http://localhost:1337/api/projects/${projectId}`);
+      const project = response.data;
+      const projectUsersEmails = project.users.map(user => user.userID?.User_Info?.email);
+      setProjectUserEmails(projectUsersEmails);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
 
   const fetchUserEmails = async () => {
     try {
@@ -65,10 +80,10 @@ function ProjectUpdate() {
     setSelectedOptions(selectedOptions);
   };
 
-  const options = userEmails.map((email) => ({
-    value: email,
-    label: email,
-  }));
+  const options = userEmails
+  .filter(email => !projectUserEmails.includes(email))
+  .map(email => ({ value: email, label: email }));
+
 
   const handleFileChange = (e) => {
     setNewFiles(e.target.files);
