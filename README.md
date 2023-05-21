@@ -23,14 +23,14 @@ To run BrainBank, make sure you have the following dependencies installed:
 Follow these steps to install BrainBank and its necessary dependencies:
 
 1. Start by navigating to the project's backend directory:
-  ```cd Mern/Server```
+  ```cd mern/server```
 
 2. Install the backend dependencies:
   ```npm install```
 
 
 3. Next, navigate to the project's frontend directory:
-   ```cd mern/Client```
+   ```cd mern/client```
 
 4. Install the frontend dependencies:
    ```npm install```
